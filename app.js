@@ -1,8 +1,10 @@
 const http = require('http')
-
+// file system core module
+const fs = require('fs')
 
 const server = http.createServer((request, response) => {
   const url = request.url
+  const method = request.method
   if (url === '/') {
     response.write('<html>')
     response.write('<head><title>My First Page</title><head>')
@@ -10,8 +12,14 @@ const server = http.createServer((request, response) => {
     response.write('</html>')
     return response.end()
   }
-  console.log(request.url, request.method, request.headers)
-  // process.exit()
+
+  // how to redirect
+  if (url === '/message' && method === 'POST') {
+    fs.writeFileSync('message.txt', 'DUMMY')
+    response.statusCode = 302
+    response.setHeader('Location', '/')
+    return response.end()
+  }
   response.setHeader('Content-Type', 'text/html')
   response.write('<html>')
   response.write('<head><title>My First Page</title><head>')
