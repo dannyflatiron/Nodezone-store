@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/dannyflatiron/starting-NodeJS-server/issues"
   },
-  "homepage": "https://github.com/dannyflatiron/starting-NodeJS-server#readme"
+  "homepage": "https://github.com/dannyflatiron/starting-NodeJS-server#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
 }
