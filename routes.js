@@ -6,7 +6,7 @@ const url = request.url
 const method = request.method
 if (url === '/') {
   response.write('<html>')
-  response.write('<head><title>My First Page</title><head>')
+  response.write('<head><title>Enter Message</title><head>')
   response.write('<body><form action="/message" method="POST"><input name="message" type="text"><button type="submit">Send</button></input></form></body>')
   response.write('</html>')
   return response.end()
