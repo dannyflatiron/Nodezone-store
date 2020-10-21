@@ -1,0 +1,20 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "10/21/20",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dannyflatiron/starting-NodeJS-server.git"
+  },
+  "author": "Danny Reina",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dannyflatiron/starting-NodeJS-server/issues"
+  },
+  "homepage": "https://github.com/dannyflatiron/starting-NodeJS-server#readme"
+}
