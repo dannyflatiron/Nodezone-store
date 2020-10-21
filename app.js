@@ -15,7 +15,18 @@ const server = http.createServer((request, response) => {
 
   // how to redirect
   if (url === '/message' && method === 'POST') {
-    fs.writeFileSync('message.txt', 'DUMMY')
+    const body = []
+    // how to parse data
+    request.on('data', (chunk) => {
+      console.log(chunk)
+      body.push(chunk)
+    })
+    request.on('end', () => {
+      const parsedBody = Buffer.concat(body).toString()
+      const message = parsedBody.split('=')[1]
+      // creates a file called message.txt that has the contents of message
+      fs.writeFileSync('message.txt', message)
+    })
     response.statusCode = 302
     response.setHeader('Location', '/')
     return response.end()
