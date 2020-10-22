@@ -29,3 +29,19 @@
 -differntiate installing 3rd party packages between production dependencies, development dependencies and global dependencies 
 
 -learning what is express.js (it is middleware) and installing it
+
+-when using Express use next() to allow the program to travel from one middleware to the next middleware. middleware is defined when .use(request, response, next) is utilized 
+
+-aware of need to order middlewares to prevent response.send errors 
+
+-learned how to parse incoming request data with the body-parser package
+
+-how to manage routing 
+
+-learned how to filter routes
+
+-advanced css styling
+
+-how to submit files statically
+
+-how to use the path module to get absolute clean paths which would work on every operating system
