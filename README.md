@@ -45,3 +45,11 @@
 -how to submit files statically
 
 -how to use the path module to get absolute clean paths which would work on every operating system
+
+10/22/20
+
+-how to use html template engines
+
+-how to create dynamic html files with pug
+
+-
