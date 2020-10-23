@@ -3,6 +3,8 @@ const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 
+const errorController = require('./controllers/error')
+
 const app = express()
 
 app.set('view engine', 'ejs')
@@ -18,9 +20,7 @@ app.use('/admin', adminRoutes)
 app.use(shopRoutes)
 
 
-app.use((request, response, next) => {
-  response.status(404).render('404', { pageTitle: 'Page Not Found', path: '' })
-})
+app.use(errorController.get404Page)
 
 
 app.listen(3000)
