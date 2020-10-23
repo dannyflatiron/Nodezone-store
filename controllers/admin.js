@@ -17,7 +17,7 @@ exports.getAddProduct = (request, response, next) => {
     const price = request.body.price
     const description = request.body.description
 
-    const product = new Product(title, imageURL, price, description)
+    const product = new Product(title, imageUrl, description, price)
     product.save()
     response.redirect('/')
   }
