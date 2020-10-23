@@ -52,4 +52,6 @@
 
 -how to create dynamic html files with pug
 
--
+-how to create dynamic html files with ejs
+
+-how to create dynamic html files with handlebars
