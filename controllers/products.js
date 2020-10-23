@@ -18,12 +18,13 @@ exports.getAddProduct = (request, response, next) => {
   }
 
   exports.getProducts = (request, response, next) => {
-    const products = Product.fetchAll()
-    response.render('shop', { 
-      prods: products, 
-      pageTitle: 'Shop', 
-      path: '/', 
-      hasProducts: products.length > 0,
-      activeShop: true,
-      productCss: true})
-  }
+    Product.fetchAll(products => {
+        response.render('shop', { 
+          prods: products, 
+          pageTitle: 'Shop', 
+          path: '/', 
+          hasProducts: products.length > 0,
+          activeShop: true,
+          productCss: true})
+      })
+    }
