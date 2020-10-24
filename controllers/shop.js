@@ -18,7 +18,6 @@ exports.getProduct = (request, response, next) => {
   })
 }
 
-
 exports.getIndex = (request, response, next) => {
   Product.fetchAll(products => {
     response.render('shop/index', { 
