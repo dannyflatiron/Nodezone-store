@@ -37,3 +37,10 @@ exports.getCheckout = (request, response, next) => {
     pageTitle: 'Checkout'
   })
 }
+
+exports.getOrders = (request, response, next) => {
+  response.render('shop/orders', {
+    path: '/orders',
+    pageTitle: 'Your Orders'
+  })
+}
