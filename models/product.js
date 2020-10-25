@@ -15,22 +15,34 @@ const getProductsFromFile = (cb) => {
 }
 
 module.exports = class Product {
-    constructor(title, imageUrl, description, price) {
+    constructor(id, title, imageUrl, description, price) {
+        this.id = id
         this.title = title,
         this.imageUrl = imageUrl,
         this.description = description,
         this.price = price
     }
 
+    // get products array
+    // find index of product from array that matches this
+    // ensure immutability of products array
+    // replace existing product in products array with this
     save() {
-        this.id = Math.random().toString()
         getProductsFromFile(products => {
-            console.log(this)
-
-            products.push(this)
-            fs.writeFile(p, JSON.stringify(products), (error) => {
-                console.log(error)
-            })
+            if (this.id) {
+                const existingProductIndex = products.findIndex(product => product.id === this.id)
+                const updatedProducts = [...products]
+                updatedProducts[existingProductIndex] = this
+                fs.writeFile(p, JSON.stringify(updatedProducts), (error) => {
+                    console.log(error)
+                })
+            } else {
+                this.id = Math.random().toString()
+                products.push(this)
+                fs.writeFile(p, JSON.stringify(products), (error) => {
+                    console.log(error)
+                })
+            }
         })
     }
 
