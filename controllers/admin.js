@@ -58,3 +58,9 @@ exports.getAddProduct = (request, response, next) => {
         })
       })
   }
+
+  exports.postDeleteProduct = (request, response, next) => {
+    const prodId = request.body.productId
+    Product.deleteById(prodId)
+    response.redirect('/admin/products')
+  }

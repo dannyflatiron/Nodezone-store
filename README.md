@@ -55,3 +55,19 @@
 -how to create dynamic html files with ejs
 
 -how to create dynamic html files with handlebars
+
+10/23/20
+
+-MVC architecture and data flow in a node.js app
+
+10/24/20
+
+-dynamic params
+
+-GET routes have a params object
+
+-POST routes do not have a params object, in order to access user submitted data try doing request.body
+
+-mobile optimization
+
+-ejs include method does not automatically take the block argument from a for loop. instead one has to manually pass in that block variable into include <%- include('../partials/add-to-cart-form.ejs', { product: product }) %>
