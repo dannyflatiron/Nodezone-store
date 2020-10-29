@@ -16,7 +16,10 @@ exports.getAddProduct = (request, response, next) => {
 
     const product = new Product(null, title, imageUrl, description, price)
     product.save()
-    response.redirect('/')
+    .then(() => {
+      response.redirect('/')
+    })
+    .catch(error => console.log('error in creating a product', error))
   }
 
   exports.getEditProduct = (request, response, next) => {
