@@ -69,6 +69,7 @@ exports.postCart = (request, response, next) => {
     fetchedCart = cart
     return cart.getProducts({ where: { id: prodId }})
   })
+  // updates quantity of product in cart if product already exists in cart
   .then(products => {
     let product
     if (products.length > 0) {
@@ -82,6 +83,7 @@ exports.postCart = (request, response, next) => {
     }
     return Product.findByPk(prodId)
   })
+  // adds a new product to cart 
   .then(product => {
     return fetchedCart.addProduct(product, 
       { through: { quantity: newQuantitty } })
