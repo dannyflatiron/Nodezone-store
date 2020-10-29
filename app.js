@@ -49,7 +49,7 @@ Product.belongsToMany(Cart, { through: CartItem })
 
 // sync takes the models and create tables out of them
 sequelize
-  .sync({ force: true })
+  .sync()
   .then(result => {
     return User.findByPk(1)
   })
@@ -57,9 +57,12 @@ sequelize
     if (!user) {
       return User.create({ name: 'Danny', email: 'dannyflatiron@gmail.com' })
     }
-    return Promise.resolve(user)
+    return user
   })
   .then(user => {
+    return user.createCart()
+  })
+  .then(cart => {
     app.listen(3000)
   })
   .catch(error => {
