@@ -1,3 +1,4 @@
+const { restart } = require('nodemon')
 const Product = require('../models/product')
 
 exports.getAddProduct = (request, response, next) => {
@@ -13,13 +14,18 @@ exports.getAddProduct = (request, response, next) => {
     const imageUrl = request.body.imageUrl
     const price = request.body.price
     const description = request.body.description
-
-    const product = new Product(null, title, imageUrl, description, price)
-    product.save()
-    .then(() => {
-      response.redirect('/')
+    Product.create({
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
+      description: description
     })
-    .catch(error => console.log('error in creating a product', error))
+    .then(result => {
+      console.log(result)
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   exports.getEditProduct = (request, response, next) => {
