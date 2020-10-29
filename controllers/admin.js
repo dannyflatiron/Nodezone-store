@@ -21,7 +21,7 @@ exports.getAddProduct = (request, response, next) => {
       description: description
     })
     .then(result => {
-      console.log(result)
+      response.redirect('/admin/products')
     })
     .catch(error => {
       console.log(error)
@@ -34,7 +34,8 @@ exports.getAddProduct = (request, response, next) => {
       return response.redirect('/')
     }
     const prodId = request.params.productId
-    Product.findById(prodId, product => {
+    Product.findByPk(prodId)
+    .then(product => {
       if(!product) {
         return response.redirect('/')
       }
@@ -45,6 +46,9 @@ exports.getAddProduct = (request, response, next) => {
         product: product
       })
     })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   exports.postEditProduct = (request, response, next) => {
@@ -53,23 +57,48 @@ exports.getAddProduct = (request, response, next) => {
     const updatedPrice = request.body.price
     const updatedDesc = request.body.description
     const updatedImgUrl = request.body.imageUrl
-    updatedProduct = new Product(prodId, updatedTitle, updatedImgUrl, updatedDesc, updatedPrice)
-    updatedProduct.save()
-    response.redirect('/admin/products')
+    Product.findByPk(prodId)
+    .then(product => {
+      product.title = updatedTitle
+      product.price = updatedPrice
+      product.description = updatedDesc
+      product.imageUrl = updatedImgUrl
+      return product.save()
+    })
+    .then(result => {
+      console.log('UPDATED PRODUCT', result)
+      response.redirect('/admin/products')
+
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   exports.getProducts = (request, response, next) => {
-    Product.fetchAll(products => {
-        response.render('admin/products', { 
-          prods: products, 
-          pageTitle: 'Admin Products', 
-          path: '/admin/products', 
-        })
+    Product.findAll()
+    .then(products => {
+      response.render('admin/products', { 
+        prods: products, 
+        pageTitle: 'Admin Products', 
+        path: '/admin/products', 
       })
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   exports.postDeleteProduct = (request, response, next) => {
     const prodId = request.body.productId
-    Product.deleteById(prodId)
-    response.redirect('/admin/products')
+    Product.findByPk(prodId)
+    .then(product => {
+      return product.destroy()
+    })
+    .then(result => {
+      response.redirect('/admin/products')
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
