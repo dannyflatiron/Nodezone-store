@@ -45,30 +45,52 @@ exports.getIndex = (request, response, next) => {
 }
 
 exports.getCart = (request, response, next) => {
-  Cart.getCart(cart => {
-    Product.fetchAll(products => {
-      const cartProducts = []
-      for (product of products) {
-        const cartProductData = cart.products.find(prod => prod.id === product.id)
-        if (cartProductData) {
-          cartProducts.push({productData: product, qty: cartProductData.qty})
-        }
-      }
+  request.user.getCart()
+  .then(cart => {
+    return cart.getProducts()
+    .then(products => {
       response.render('shop/cart', {
         path: '/cart',
         pageTitle: "Your Cart",
-        products: cartProducts
+        products: products
       })
     })
+    .catch(error => console.log(error))
   })
+  .catch(error => console.log(error))
 }
 
 exports.postCart = (request, response, next) => {
   const prodId = request.body.productId
-  Product.findById(prodId, product => {
-    Cart.addProduct(prodId, product.price)
+  let fetchedCart
+  let newQuantitty = 1
+  request.user.getCart()
+  .then(cart => {
+    fetchedCart = cart
+    return cart.getProducts({ where: { id: prodId }})
   })
-  response.redirect('/cart')
+  .then(products => {
+    let product
+    if (products.length > 0) {
+      product = products[0]
+    }
+    
+    if (product) {
+      const oldQuantity = product.cartItem.quantity
+      newQuantitty = oldQuantity + 1
+      return product
+    }
+    return Product.findByPk(prodId)
+  })
+  .then(product => {
+    return fetchedCart.addProduct(product, 
+      { through: { quantity: newQuantitty } })
+  })
+  .catch(error => console.log(error))
+  .then(() => {
+    response.redirect('/cart')
+  })
+  .catch(error => console.log(error))
 }
 
 exports.postCartDeleteProduct = (request, response, next) => {
