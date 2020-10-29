@@ -2,32 +2,41 @@ const Product = require('../models/product')
 const Cart = require('../models/cart')
 
 exports.getProducts = (request, response, next) => {
-  Product.fetchAll(products => {
-      response.render('shop/product-list', { 
-        prods: products, 
-        pageTitle: 'All Products', 
-        path: '/products', 
-      })
+  Product.fetchAll()
+  .then(([rows]) => {
+    response.render('shop/product-list', { 
+      prods: rows, 
+      pageTitle: 'All Products', 
+      path: '/products', 
     })
+  })
+  .catch(error => console.log('error in shop controller getIndex', error))
 }
 
 exports.getProduct = (request, response, next) => {
   const prodId = request.params.productId
-  Product.findById(prodId, product => {
-    response.render('shop/product-detail', { product: product, pageTitle: product.title, path: '/products' })
+  Product.findById(prodId)
+  .then(([product]) => {
+    response.render('shop/product-detail', { 
+      product: product[0], 
+      pageTitle: product.title, 
+      path: '/products' 
+    })
   })
+  .catch(error => console.log('error in shop controller getProduct', error))
 }
 
 exports.getIndex = (request, response, next) => {
-  Product.fetchAll(products => {
-    response.render('shop/index', { 
-      prods: products, 
-      pageTitle: 'Shop', 
-      path: '/', 
-      hasProducts: products.length > 0,
-      activeShop: true,
-      productCss: true})
-  })
+  Product.fetchAll()
+    .then(([rows]) => {
+      console.log('rows', rows)
+      response.render('shop/index', { 
+        prods: rows, 
+        pageTitle: 'Shop', 
+        path: '/', 
+      })
+    })
+    .catch(error => console.log('error in shop controller getIndex', error))
 }
 
 exports.getCart = (request, response, next) => {
