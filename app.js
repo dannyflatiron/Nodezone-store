@@ -8,7 +8,7 @@ const errorController = require('./controllers/error')
 
 const app = express()
 
-const db = require('./util/database')
+const sequelize = require('./util/database')
 
 app.set('view engine', 'ejs')
 app.set('views', 'views')
@@ -25,5 +25,12 @@ app.use(shopRoutes)
 
 app.use(errorController.get404Page)
 
+// sync takes the models and create tables out of them
+sequelize.sync().then(result => {
+  // console.log(result)
+})
+.catch(error => {
+  console.log(error)
+})
 
 app.listen(3000)
