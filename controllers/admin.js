@@ -76,7 +76,7 @@ exports.getAddProduct = (request, response, next) => {
   }
 
   exports.getProducts = (request, response, next) => {
-    Product.findAll()
+    request.user.getProducts()
     .then(products => {
       response.render('admin/products', { 
         prods: products, 
