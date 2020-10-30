@@ -111,16 +111,13 @@ exports.postCartDeleteProduct = (request, response, next) => {
   .catch(error => console.log(error))
 }
 
-exports.getCheckout = (request, response, next) => {
-  response.render('shop/checkout', {
-    path: '/checkout',
-    pageTitle: 'Checkout'
-  })
-}
+// removed getCheckout()
 
 exports.postOrder = (request, response, next) => {
+  let fetchedCart
   request.user.getCart()
   .then(cart => {
+    fetchedCart = cart
     return cart.getProducts()
   })
   .then(products => {
@@ -136,14 +133,25 @@ exports.postOrder = (request, response, next) => {
     .catch(error => console.log(error))
   })
   .then(result => {
+    return fetchedCart.setProducts(null)
+})
+  .then(result => {
     response.redirect('/orders')
   })
   .catch(error => console.log(error))
 }
 
 exports.getOrders = (request, response, next) => {
-  response.render('shop/orders', {
-    path: '/orders',
-    pageTitle: 'Your Orders'
+  // eager loading
+  // fetch all orders and fetch all products per order
+  // each order will now have a products array
+  request.user.getOrders({include: ['products']})
+  .then(orders => {
+    response.render('shop/orders', {
+      path: '/orders',
+      pageTitle: 'Your Orders',
+      orders: orders
+    })
   })
+  .catch(errors => console.log(error))
 }
