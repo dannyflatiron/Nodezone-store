@@ -118,6 +118,29 @@ exports.getCheckout = (request, response, next) => {
   })
 }
 
+exports.postOrder = (request, response, next) => {
+  request.user.getCart()
+  .then(cart => {
+    return cart.getProducts()
+  })
+  .then(products => {
+    return request.user.createOrder()
+    .then(order => {
+      return order.addProducts(
+        products.map(product => {
+          product.orderItem = { quantity: product.cartItem.quantity }
+          return product
+        })
+      )
+    })
+    .catch(error => console.log(error))
+  })
+  .then(result => {
+    response.redirect('/orders')
+  })
+  .catch(error => console.log(error))
+}
+
 exports.getOrders = (request, response, next) => {
   response.render('shop/orders', {
     path: '/orders',
