@@ -54,8 +54,8 @@ Order.belongsToMany(Product, { through: OrderItem })
 
 // sync takes the models and create tables out of them
 sequelize
-  .sync({ force: true })
-  // .sync()
+  // .sync({ force: true })
+  .sync()
   .then(result => {
     return User.findByPk(1)
   })
