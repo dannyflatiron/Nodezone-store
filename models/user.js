@@ -84,15 +84,17 @@ class User {
     const db = getDb()
     return this.getCart()
     .then(products => {
+      // create order
       const order = {
         items: this.cart.items,
+        // add user to order
         user: {
           _id: new ObjectId(this._id),
           name: this.name,
         }
       }
       return db.collection('orders')
-      // create order 
+      // create order in orders collection in db
       .insertOne(order)
     })
     .then(result => {
