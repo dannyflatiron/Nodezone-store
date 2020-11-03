@@ -65,6 +65,7 @@ exports.postCart = (request, response, next) => {
   })
   .then(result => {
     console.log(result)
+    response.redirect('/cart')
   })
   .catch(error => {
     console.log(error)
