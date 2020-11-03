@@ -127,7 +127,7 @@ exports.getOrders = (request, response, next) => {
   // eager loading
   // fetch all orders and fetch all products per order
   // each order will now have a products array
-  request.user.getOrders({include: ['products']})
+  request.user.getOrders()
   .then(orders => {
     response.render('shop/orders', {
       path: '/orders',
