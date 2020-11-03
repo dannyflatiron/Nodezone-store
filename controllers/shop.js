@@ -62,37 +62,47 @@ exports.getCart = (request, response, next) => {
 
 exports.postCart = (request, response, next) => {
   const prodId = request.body.productId
-  let fetchedCart
-  let newQuantitty = 1
-  request.user.getCart()
-  .then(cart => {
-    fetchedCart = cart
-    return cart.getProducts({ where: { id: prodId }})
-  })
-  // updates quantity of product in cart if product already exists in cart
-  .then(products => {
-    let product
-    if (products.length > 0) {
-      product = products[0]
-    }
-    
-    if (product) {
-      const oldQuantity = product.cartItem.quantity
-      newQuantitty = oldQuantity + 1
-      return product
-    }
-    return Product.findByPk(prodId)
-  })
-  // adds a new product to cart 
+  Product.findById(prodId)
   .then(product => {
-    return fetchedCart.addProduct(product, 
-      { through: { quantity: newQuantitty } })
+    return request.user.addToCart(product)
   })
-  .catch(error => console.log(error))
-  .then(() => {
-    response.redirect('/cart')
+  .then(result => {
+    console.log(result)
   })
-  .catch(error => console.log(error))
+  .catch(error => {
+    console.log(error)
+  })
+  // let fetchedCart
+  // let newQuantitty = 1
+  // request.user.getCart()
+  // .then(cart => {
+  //   fetchedCart = cart
+  //   return cart.getProducts({ where: { id: prodId }})
+  // })
+  // // updates quantity of product in cart if product already exists in cart
+  // .then(products => {
+  //   let product
+  //   if (products.length > 0) {
+  //     product = products[0]
+  //   }
+    
+  //   if (product) {
+  //     const oldQuantity = product.cartItem.quantity
+  //     newQuantitty = oldQuantity + 1
+  //     return product
+  //   }
+  //   return Product.findByPk(prodId)
+  // })
+  // // adds a new product to cart 
+  // .then(product => {
+  //   return fetchedCart.addProduct(product, 
+  //     { through: { quantity: newQuantitty } })
+  // })
+  // .catch(error => console.log(error))
+  // .then(() => {
+  //   response.redirect('/cart')
+  // })
+  // .catch(error => console.log(error))
 }
 
 exports.postCartDeleteProduct = (request, response, next) => {
