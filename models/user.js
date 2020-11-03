@@ -80,6 +80,23 @@ class User {
     )
   }
 
+  addOrder() {
+    const db = getDb()
+    return db.collection('orders')
+    // create order 
+    .insertOne(this.cart)
+    .then(result => {
+      // if creating order succeeds, empty cart
+      this.cart = { items: [] }
+      return db.collection('users')
+      .updateOne(
+        // empty cart items after order is created
+        { _id: new ObjectId(this._id) },
+        { $set: { cart: {items: [] } } }
+      )
+    })
+  }
+
   static findById(userId) {
     const db = getDb()
     return db.collection('users')
