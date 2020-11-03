@@ -49,6 +49,8 @@ class User {
   }
 
   getCart() {
+    // add logic to check if product that exists in cart was deleted from products collection
+    // possible approaches would be to check if product exists if not then clear cart of that product or just clear cart entirely
     const db = getDb()
     const productIds = this.cart.items.map(i => {
       return i.productId
