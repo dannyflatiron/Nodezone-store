@@ -46,18 +46,15 @@ exports.getIndex = (request, response, next) => {
 
 exports.getCart = (request, response, next) => {
   request.user.getCart()
-  .then(cart => {
-    return cart.getProducts()
-    .then(products => {
-      response.render('shop/cart', {
-        path: '/cart',
-        pageTitle: "Your Cart",
-        products: products
-      })
+  .then(products => {
+    response.render('shop/cart', {
+      path: '/cart',
+      pageTitle: "Your Cart",
+      products: products
     })
-    .catch(error => console.log(error))
   })
   .catch(error => console.log(error))
+  
 }
 
 exports.postCart = (request, response, next) => {
