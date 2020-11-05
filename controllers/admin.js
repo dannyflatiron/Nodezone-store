@@ -19,6 +19,9 @@ exports.getAddProduct = (request, response, next) => {
       description: description,
       imageUrl: imageUrl
     })
+    // save method is coming from mongoose 
+    // it does not need to be created
+    // mongoose is an Object Relational Document framework just as ActiveRecord
     product.save()
     .then(result => {
       response.redirect('/admin/products')
