@@ -47,7 +47,6 @@ exports.getIndex = (request, response, next) => {
 exports.getCart = (request, response, next) => {
   request.user.populate('cart.items.productId').execPopulate()
   .then(user => {
-    console.log('user', user.cart.items)
     const products = user.cart.items
     response.render('shop/cart', {
       path: '/cart',
@@ -117,10 +116,11 @@ exports.postCartDeleteProduct = (request, response, next) => {
 // removed getCheckout()
 
 exports.postOrder = (request, response, next) => {
-  request.user.populate('cart.items.prodcutId').execPopulate()
+  request.user.populate('cart.items.productId').execPopulate()
   .then(user => {
     const products = user.cart.items.map(i => {
-      return {quantity: i.quantity, product: i.productId}
+      // mongoose provides _doc to grab all the meta data from an object
+      return {quantity: i.quantity, product: { ...i.productId._doc }}
     })
     const order = new Order({
       user: {
@@ -132,7 +132,7 @@ exports.postOrder = (request, response, next) => {
     return order.save()
   })
   .then(result => {
-    result.redirect('/orders')
+    response.redirect('/orders')
   })
   .catch(error => console.log(error))
 }
@@ -141,13 +141,13 @@ exports.getOrders = (request, response, next) => {
   // eager loading
   // fetch all orders and fetch all products per order
   // each order will now have a products array
-  request.user.getOrders()
-  .then(orders => {
-    response.render('shop/orders', {
-      path: '/orders',
-      pageTitle: 'Your Orders',
-      orders: orders
-    })
-  })
-  .catch(errors => console.log(error))
+  // request.user.getOrders()
+  // .then(orders => {
+  //   response.render('shop/orders', {
+  //     path: '/orders',
+  //     pageTitle: 'Your Orders',
+  //     orders: orders
+  //   })
+  // })
+  // .catch(errors => console.log(error))
 }
