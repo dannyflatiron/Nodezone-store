@@ -141,16 +141,13 @@ exports.postOrder = (request, response, next) => {
 }
 
 exports.getOrders = (request, response, next) => {
-  // eager loading
-  // fetch all orders and fetch all products per order
-  // each order will now have a products array
-  // request.user.getOrders()
-  // .then(orders => {
-  //   response.render('shop/orders', {
-  //     path: '/orders',
-  //     pageTitle: 'Your Orders',
-  //     orders: orders
-  //   })
-  // })
-  // .catch(errors => console.log(error))
+  Order.find({ 'user.userId': request.user._id })
+  .then(orders => {
+    response.render('shop/orders', {
+      path: '/orders',
+      pageTitle: 'Your Orders',
+      orders: orders
+    })
+  })
+  .catch(errors => console.log(error))
 }
