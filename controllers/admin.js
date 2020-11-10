@@ -5,7 +5,8 @@ exports.getAddProduct = (request, response, next) => {
     response.render('admin/edit-product', { 
       pageTitle: "Add Product", 
       path: '/admin/add-product',
-      editing: false
+      editing: false,
+      isAuthenticated: request.isLoggedIn
     })
   }
 
@@ -48,7 +49,8 @@ exports.getAddProduct = (request, response, next) => {
         pageTitle: "Edit Product", 
         path: '/admin/edit-product',
         editing: editMode,
-        product: product
+        product: product,
+        isAuthenticated: request.isLoggedIn
       })
     })
     .catch(error => {
