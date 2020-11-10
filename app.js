@@ -3,6 +3,8 @@ require('dotenv').config()
 
 const express = require('express')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+const session = require('express-session')
 
 const errorController = require('./controllers/error')
 
@@ -20,7 +22,7 @@ const authRoutes = require('./routes/auth')
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
-const mongoose = require('mongoose')
+app.use(session({secret: `${process.env.SESSION}`, resave: false, saveUninitialized: false}))
 
 app.use((request, response, next) => {
   User.findById("5fa9e0a49214c4d76e7cf96d")
