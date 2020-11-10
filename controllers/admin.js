@@ -1,3 +1,4 @@
+const product = require('../models/product')
 const Product = require('../models/product')
 
 exports.getAddProduct = (request, response, next) => {
@@ -60,13 +61,14 @@ exports.getAddProduct = (request, response, next) => {
     const updatedPrice = request.body.price
     const updatedDesc = request.body.description
     const updatedImgUrl = request.body.imageUrl
-    const product = new Product(
-      updatedTitle,  
-      updatedPrice, 
-      updatedDesc, 
-      updatedImgUrl, 
-      prodId)
-    product.save()
+    Product.findById(prodId)
+    .then(product => {
+      product.title = updatedTitle
+      product.description = updatedDesc
+      product.price = updatedPrice
+      product.imageUrl = updatedImgUrl
+      return product.save()
+    })
     .then(result => {
       console.log('UPDATED PRODUCT', result)
       response.redirect('/admin/products')
@@ -78,7 +80,7 @@ exports.getAddProduct = (request, response, next) => {
   }
 
   exports.getProducts = (request, response, next) => {
-    Product.fetchAll()
+    Product.find()
       .then(products => {
         response.render('admin/products', { 
           prods: products, 
