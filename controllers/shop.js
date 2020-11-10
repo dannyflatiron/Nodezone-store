@@ -132,6 +132,9 @@ exports.postOrder = (request, response, next) => {
     return order.save()
   })
   .then(result => {
+    return request.user.clearCart()
+  })
+  .then(result => {
     response.redirect('/orders')
   })
   .catch(error => console.log(error))
