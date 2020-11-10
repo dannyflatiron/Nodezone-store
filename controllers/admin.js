@@ -89,6 +89,7 @@ exports.getAddProduct = (request, response, next) => {
           prods: products, 
           pageTitle: 'Admin Products', 
           path: '/admin/products', 
+          isAuthenticated: request.isLoggedIn
         })
       })
       .catch(error => {
