@@ -18,7 +18,8 @@ exports.getAddProduct = (request, response, next) => {
       title: title,
       price: price,
       description: description,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+      userId: request.user
     })
     // save method is coming from mongoose 
     // it does not need to be created
