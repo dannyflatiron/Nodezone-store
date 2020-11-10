@@ -82,6 +82,8 @@ exports.getAddProduct = (request, response, next) => {
 
   exports.getProducts = (request, response, next) => {
     Product.find()
+    // 
+    .populate('userId')
       .then(products => {
         response.render('admin/products', { 
           prods: products, 
