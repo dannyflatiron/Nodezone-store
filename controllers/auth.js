@@ -19,3 +19,9 @@ exports.postLogin = (request, response, next) => {
     .catch(error => console.log(error))
   // response.setHeader('Set-Cookie', 'loggedIn=true')
 }
+
+exports.postLogout = (request, response, next) => {
+  request.session.destroy(() => {
+    response.redirect('/')
+  })
+}
