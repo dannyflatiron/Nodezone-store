@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
+const csrf = require('csurf')
 
 const errorController = require('./controllers/error')
 
@@ -19,6 +20,7 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
 })
+const csrfProtection = csrf({})
 
 app.set('view engine', 'ejs')
 app.set('views', 'views')
@@ -30,6 +32,7 @@ const authRoutes = require('./routes/auth')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({ secret: `${process.env.SESSION}`, resave: false, saveUninitialized: false, store: store }))
+app.use(csrfProtection)
 
 app.use((request, response, next) => {
   if (!request.session.user) {
@@ -41,6 +44,13 @@ app.use((request, response, next) => {
     next()
   })
   .catch(error => console.log(error))
+})
+
+app.use((request, response, next) => {
+  // locals only exist in views
+  response.locals.isAuthenticated = request.session.isLoggedIn
+  response.locals.csrfToken = request.csrfToken()
+  next()
 })
 
 app.use('/admin', adminRoutes) // leading fitler
