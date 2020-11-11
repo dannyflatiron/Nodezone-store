@@ -32,7 +32,27 @@ exports.postLogin = (request, response, next) => {
 }
 
 exports.postSignup = (requset, response, next) => {
-
+  const email = requset.body.email
+  const password = requset.body.password
+  const confirmPassword = requset.body.confirmPassword
+  User.findOne({email: email})
+  .then(userDoc => {
+    if (userDoc) {
+      return response.redireect('/signup')
+    }
+    const user = new User({
+      email: email,
+      password: password,
+      cart: { items: [] }
+    })
+    return user.save()
+  })
+  .then(result => {
+    response.redirect('/login')
+  })
+  .catch(error => {
+    console.log(error)
+  })
 }
 
 exports.postLogout = (request, response, next) => {
