@@ -2,17 +2,31 @@ const bcrypt = require('bcryptjs')
 const User = require('../models/user')
 
 exports.getLogin = (request, response, next) => {
+  let message = request.flash('error')
+  if (message.length > 0) {
+    message = message[0]
+  } else {
+    message = null
+  }
   response.render('auth/login', {
     path: '/login',
     pageTitle: "Login",
-    errorMessage: request.flash('error')
+    errorMessage: message
   })
 }
 
 exports.getSignup = (request, response, next) => {
+  let message = request.flash('error')
+  if (message.length > 0) {
+    message = message[0]
+  } else {
+    message = null
+  }
+
   response.render('auth/signup', {
     path: '/signup',
     pageTitle: "Signup",
+    errorMessage: message
   })
 }
 
@@ -36,6 +50,7 @@ exports.postLogin = (request, response, next) => {
             response.redirect('/')
           })
         }
+        request.flash('error', 'Invalid email or password')
         response.redirect('/login')
       })
       .catch(error => {
@@ -48,13 +63,14 @@ exports.postLogin = (request, response, next) => {
   // response.setHeader('Set-Cookie', 'loggedIn=true')
 }
 
-exports.postSignup = (requset, response, next) => {
-  const email = requset.body.email
-  const password = requset.body.password
-  const confirmPassword = requset.body.confirmPassword
+exports.postSignup = (request, response, next) => {
+  const email = request.body.email
+  const password = request.body.password
+  const confirmPassword = request.body.confirmPassword
   User.findOne({email: email})
   .then(userDoc => {
     if (userDoc) {
+      request.flash('error', 'Email already taken. Please pick a different one')
       return response.redirect('/signup')
     }
     return bcrypt
