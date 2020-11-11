@@ -39,7 +39,6 @@ exports.getIndex = (request, response, next) => {
       prods: products, 
       pageTitle: 'Shop', 
       path: '/',
-      isAuthenticated: request.session.isLoggedIn
     })
   })
   .catch(error => {
