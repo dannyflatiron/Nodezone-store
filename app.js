@@ -17,7 +17,7 @@ const MONGODB_URI = `mongodb+srv://dannyreina:${process.env.PASSWORD}@cluster0.v
 const app = express()
 const store = new MongoDBStore({
   uri: MONGODB_URI,
-  colleciton: 'sessions'
+  collection: 'sessions'
 })
 
 app.set('view engine', 'ejs')
