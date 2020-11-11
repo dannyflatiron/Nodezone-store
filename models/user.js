@@ -8,7 +8,7 @@ const userSchema = new Schema({
     required: true
   },
   password: {
-    type: STRING,
+    type: String,
     required: true
   },
   cart: {
