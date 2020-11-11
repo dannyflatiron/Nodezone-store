@@ -17,6 +17,7 @@ exports.getProducts = (request, response, next) => {
 }
 
 exports.getProduct = (request, response, next) => {
+  const prodId = request.params.productId
   Product.findById(prodId)
   .then(product => {
     response.render('shop/product-detail', { 
@@ -47,7 +48,7 @@ exports.getIndex = (request, response, next) => {
 }
 
 exports.getCart = (request, response, next) => {
-  request.session.user.populate('cart.items.productId').execPopulate()
+  request.user.populate('cart.items.productId').execPopulate()
   .then(user => {
     const products = user.cart.items
     response.render('shop/cart', {
@@ -65,7 +66,7 @@ exports.postCart = (request, response, next) => {
   const prodId = request.body.productId
   Product.findById(prodId)
   .then(product => {
-    return request.session.user.addToCart(product)
+    return request.user.addToCart(product)
   })
   .then(result => {
     console.log(result)
@@ -76,7 +77,7 @@ exports.postCart = (request, response, next) => {
   })
   // let fetchedCart
   // let newQuantitty = 1
-  // request.session.user.getCart()
+  // request.user.getCart()
   // .then(cart => {
   //   fetchedCart = cart
   //   return cart.getProducts({ where: { id: prodId }})
@@ -109,7 +110,7 @@ exports.postCart = (request, response, next) => {
 
 exports.postCartDeleteProduct = (request, response, next) => {
   const prodId = request.body.productId
-  request.session.user.removeFromCart(prodId)
+  request.user.removeFromCart(prodId)
   .then(result => {
     response.redirect('/cart')
   })
@@ -119,7 +120,7 @@ exports.postCartDeleteProduct = (request, response, next) => {
 // removed getCheckout()
 
 exports.postOrder = (request, response, next) => {
-  request.session.user.populate('cart.items.productId').execPopulate()
+  request.user.populate('cart.items.productId').execPopulate()
   .then(user => {
     const products = user.cart.items.map(i => {
       // mongoose provides _doc to grab all the meta data from an object
@@ -127,15 +128,15 @@ exports.postOrder = (request, response, next) => {
     })
     const order = new Order({
       user: {
-        name: request.session.user.name,
-        userId: request.session.user
+        name: request.user.name,
+        userId: request.user
       },
       products: products
     })
     return order.save()
   })
   .then(result => {
-    return request.session.user.clearCart()
+    return request.user.clearCart()
   })
   .then(result => {
     response.redirect('/orders')
@@ -144,7 +145,7 @@ exports.postOrder = (request, response, next) => {
 }
 
 exports.getOrders = (request, response, next) => {
-  Order.find({ 'user.userId': request.session.user._id })
+  Order.find({ 'user.userId': request.user._id })
   .then(orders => {
     response.render('shop/orders', {
       path: '/orders',
