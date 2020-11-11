@@ -31,14 +31,17 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({ secret: `${process.env.SESSION}`, resave: false, saveUninitialized: false, store: store }))
 
-// app.use((request, response, next) => {
-//   User.findById("5fa9e0a49214c4d76e7cf96d")
-//   .then(user => {
-//     request.user = user
-//     next()
-//   })
-//   .catch(error => console.log(error))
-// })
+app.use((request, response, next) => {
+  if (!request.session.user) {
+    return next()
+  }
+  User.findById(request.session.user._id)
+  .then(user => {
+    request.user = user
+    next()
+  })
+  .catch(error => console.log(error))
+})
 
 app.use('/admin', adminRoutes) // leading fitler
 app.use(shopRoutes)
