@@ -39,7 +39,7 @@ exports.postSignup = (requset, response, next) => {
   User.findOne({email: email})
   .then(userDoc => {
     if (userDoc) {
-      return response.redireect('/signup')
+      return response.redirect('/signup')
     }
     return bcrypt.hash(password, 12)
   })
