@@ -8,7 +8,7 @@ exports.getProducts = (request, response, next) => {
       prods: products, 
       pageTitle: 'All Products', 
       path: '/products',
-      isAuthenticated: request.isLoggedIn 
+      isAuthenticated: request.session.isLoggedIn 
     })
   })
   .catch(error => {
@@ -17,14 +17,13 @@ exports.getProducts = (request, response, next) => {
 }
 
 exports.getProduct = (request, response, next) => {
-  const prodId = request.params.productId
   Product.findById(prodId)
   .then(product => {
     response.render('shop/product-detail', { 
       product: product, 
       pageTitle: product.title, 
       path: '/products',
-      isAuthenticated: request.isLoggedIn 
+      isAuthenticated: request.session.isLoggedIn 
     })
   })
   .catch(error => {
@@ -39,7 +38,7 @@ exports.getIndex = (request, response, next) => {
       prods: products, 
       pageTitle: 'Shop', 
       path: '/',
-      isAuthenticated: request.isLoggedIn
+      isAuthenticated: request.session.isLoggedIn
     })
   })
   .catch(error => {
@@ -48,14 +47,14 @@ exports.getIndex = (request, response, next) => {
 }
 
 exports.getCart = (request, response, next) => {
-  request.user.populate('cart.items.productId').execPopulate()
+  request.session.user.populate('cart.items.productId').execPopulate()
   .then(user => {
     const products = user.cart.items
     response.render('shop/cart', {
       path: '/cart',
       pageTitle: "Your Cart",
       products: products,
-      isAuthenticated: request.isLoggedIn
+      isAuthenticated: request.session.isLoggedIn
     })
   })
   .catch(error => console.log(error))
@@ -66,7 +65,7 @@ exports.postCart = (request, response, next) => {
   const prodId = request.body.productId
   Product.findById(prodId)
   .then(product => {
-    return request.user.addToCart(product)
+    return request.session.user.addToCart(product)
   })
   .then(result => {
     console.log(result)
@@ -77,7 +76,7 @@ exports.postCart = (request, response, next) => {
   })
   // let fetchedCart
   // let newQuantitty = 1
-  // request.user.getCart()
+  // request.session.user.getCart()
   // .then(cart => {
   //   fetchedCart = cart
   //   return cart.getProducts({ where: { id: prodId }})
@@ -110,7 +109,7 @@ exports.postCart = (request, response, next) => {
 
 exports.postCartDeleteProduct = (request, response, next) => {
   const prodId = request.body.productId
-  request.user.removeFromCart(prodId)
+  request.session.user.removeFromCart(prodId)
   .then(result => {
     response.redirect('/cart')
   })
@@ -120,7 +119,7 @@ exports.postCartDeleteProduct = (request, response, next) => {
 // removed getCheckout()
 
 exports.postOrder = (request, response, next) => {
-  request.user.populate('cart.items.productId').execPopulate()
+  request.session.user.populate('cart.items.productId').execPopulate()
   .then(user => {
     const products = user.cart.items.map(i => {
       // mongoose provides _doc to grab all the meta data from an object
@@ -128,15 +127,15 @@ exports.postOrder = (request, response, next) => {
     })
     const order = new Order({
       user: {
-        name: request.user.name,
-        userId: request.user
+        name: request.session.user.name,
+        userId: request.session.user
       },
       products: products
     })
     return order.save()
   })
   .then(result => {
-    return request.user.clearCart()
+    return request.session.user.clearCart()
   })
   .then(result => {
     response.redirect('/orders')
@@ -145,13 +144,13 @@ exports.postOrder = (request, response, next) => {
 }
 
 exports.getOrders = (request, response, next) => {
-  Order.find({ 'user.userId': request.user._id })
+  Order.find({ 'user.userId': request.session.user._id })
   .then(orders => {
     response.render('shop/orders', {
       path: '/orders',
       pageTitle: 'Your Orders',
       orders: orders,
-      isAuthenticated: request.isLoggedIn
+      isAuthenticated: request.session.isLoggedIn
     })
   })
   .catch(errors => console.log(error))
