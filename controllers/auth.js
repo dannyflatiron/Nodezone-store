@@ -5,7 +5,6 @@ exports.getLogin = (request, response, next) => {
   response.render('auth/login', {
     path: '/login',
     pageTitle: "Login",
-    isAuthenticated: false
   })
 }
 
@@ -13,7 +12,6 @@ exports.getSignup = (request, response, next) => {
   response.render('auth/signup', {
     path: '/signup',
     pageTitle: "Signup",
-    isAuthenticated: false
   })
 }
 

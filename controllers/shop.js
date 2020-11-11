@@ -7,8 +7,7 @@ exports.getProducts = (request, response, next) => {
     response.render('shop/product-list', { 
       prods: products, 
       pageTitle: 'All Products', 
-      path: '/products',
-      isAuthenticated: request.session.isLoggedIn 
+      path: '/products'
     })
   })
   .catch(error => {
@@ -23,8 +22,7 @@ exports.getProduct = (request, response, next) => {
     response.render('shop/product-detail', { 
       product: product, 
       pageTitle: product.title, 
-      path: '/products',
-      isAuthenticated: request.session.isLoggedIn 
+      path: '/products'
     })
   })
   .catch(error => {
@@ -53,8 +51,7 @@ exports.getCart = (request, response, next) => {
     response.render('shop/cart', {
       path: '/cart',
       pageTitle: "Your Cart",
-      products: products,
-      isAuthenticated: request.session.isLoggedIn
+      products: products
     })
   })
   .catch(error => console.log(error))
@@ -149,8 +146,7 @@ exports.getOrders = (request, response, next) => {
     response.render('shop/orders', {
       path: '/orders',
       pageTitle: 'Your Orders',
-      orders: orders,
-      isAuthenticated: request.session.isLoggedIn
+      orders: orders
     })
   })
   .catch(errors => console.log(error))

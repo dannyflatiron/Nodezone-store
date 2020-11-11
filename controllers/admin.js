@@ -6,7 +6,6 @@ exports.getAddProduct = (request, response, next) => {
       pageTitle: "Add Product", 
       path: '/admin/add-product',
       editing: false,
-      isAuthenticated: request.session.isLoggedIn
     })
   }
 
@@ -50,8 +49,7 @@ exports.getAddProduct = (request, response, next) => {
         path: '/admin/edit-product',
         editing: editMode,
         product: product,
-        isAuthenticated: request.session.isLoggedIn
-      })
+        })
     })
     .catch(error => {
       console.log(error)
@@ -91,8 +89,7 @@ exports.getAddProduct = (request, response, next) => {
           prods: products, 
           pageTitle: 'Admin Products', 
           path: '/admin/products', 
-          isAuthenticated: request.session.isLoggedIn
-        })
+            })
       })
       .catch(error => {
         console.log(error)
