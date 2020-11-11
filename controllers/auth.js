@@ -19,14 +19,30 @@ exports.getSignup = (request, response, next) => {
 
 exports.postLogin = (request, response, next) => {
   // redirects resets the request object therefore isLoggedIn is inherently undefined when it reaches the view
-    User.findById("5fa9e0a49214c4d76e7cf96d")
+  const email = request.body.email
+  const password = request.body.password
+    User.findOne({email: email})
     .then(user => {
-      request.session.isLoggedIn = true
-      request.session.user = user
-      request.session.save(error => {
-        console.log(error)
-        response.redirect('/')
+      if (!user) {
+        return response.redirect('/login')
+      }
+      bcrypt.compare(password, user.password)
+      .then(passwordsDoMatch => {
+        if (passwordsDoMatch) {
+          request.session.isLoggedIn = true
+          request.session.user = user
+          return request.session.save(error => {
+            console.log(error)
+            response.redirect('/')
+          })
+        }
+        response.redirect('/login')
       })
+      .catch(error => {
+        console.log(error)
+        response.redirect('/login')
+      })
+
     })
     .catch(error => console.log(error))
   // response.setHeader('Set-Cookie', 'loggedIn=true')
