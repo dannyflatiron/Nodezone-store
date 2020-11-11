@@ -8,6 +8,14 @@ exports.getLogin = (request, response, next) => {
   })
 }
 
+exports.getSignup = (request, response, next) => {
+  response.render('auth/signup', {
+    path: '/signup',
+    pageTitle: "Signup",
+    isAuthenticated: false
+  })
+}
+
 exports.postLogin = (request, response, next) => {
   // redirects resets the request object therefore isLoggedIn is inherently undefined when it reaches the view
     User.findById("5fa9e0a49214c4d76e7cf96d")
@@ -23,8 +31,13 @@ exports.postLogin = (request, response, next) => {
   // response.setHeader('Set-Cookie', 'loggedIn=true')
 }
 
+exports.postSignup = (requset, response, next) => {
+
+}
+
 exports.postLogout = (request, response, next) => {
-  request.session.destroy(() => {
+  request.session.destroy(error => {
+    console.log(error)
     response.redirect('/')
   })
 }
