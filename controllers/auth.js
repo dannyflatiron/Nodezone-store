@@ -5,6 +5,7 @@ exports.getLogin = (request, response, next) => {
   response.render('auth/login', {
     path: '/login',
     pageTitle: "Login",
+    errorMessage: request.flash('error')
   })
 }
 
@@ -22,6 +23,7 @@ exports.postLogin = (request, response, next) => {
     User.findOne({email: email})
     .then(user => {
       if (!user) {
+        request.flash('error', 'Invalid email or password')
         return response.redirect('/login')
       }
       bcrypt.compare(password, user.password)
