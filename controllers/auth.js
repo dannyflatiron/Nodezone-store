@@ -14,7 +14,10 @@ exports.postLogin = (request, response, next) => {
     .then(user => {
       request.session.isLoggedIn = true
       request.session.user = user
-      response.redirect('/')
+      request.session.save(error => {
+        console.log(error)
+        response.redirect('/')
+      })
     })
     .catch(error => console.log(error))
   // response.setHeader('Set-Cookie', 'loggedIn=true')
