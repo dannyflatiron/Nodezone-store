@@ -41,19 +41,21 @@ exports.postSignup = (requset, response, next) => {
     if (userDoc) {
       return response.redirect('/signup')
     }
-    return bcrypt.hash(password, 12)
+    return bcrypt
+      .hash(password, 12)
+      .then(hashedPassword => {
+        const user = new User({
+          email: email,
+          password: hashedPassword,
+          cart: { items: [] }
+        })
+        return user.save()
+      })
+      .then(result => {
+        response.redirect('/login')
+      })
   })
-  .then(hashedPassword => {
-    const user = new User({
-      email: email,
-      password: hashedPassword,
-      cart: { items: [] }
-    })
-    return user.save()
-  })
-  .then(result => {
-    response.redirect('/login')
-  })
+
   .catch(error => {
     console.log(error)
   })
