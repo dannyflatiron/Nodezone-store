@@ -116,3 +116,17 @@ exports.postLogout = (request, response, next) => {
     response.redirect('/')
   })
 }
+
+exports.getReset = (request, response, next) => {
+  let message = request.flash('error')
+  if (message.length > 0) {
+    message = message[0]
+  } else {
+    message = null
+  }
+  response.render('auth/reset', {
+    path: '/reset',
+    pageTitle: "Reset Password",
+    errorMessage: message
+  })
+}
