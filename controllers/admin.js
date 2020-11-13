@@ -64,25 +64,30 @@ exports.getAddProduct = (request, response, next) => {
     const updatedImgUrl = request.body.imageUrl
     Product.findById(prodId)
     .then(product => {
+      if (product.userId.toString() !== request.user._id.toString()) {
+        return response.redirect('/')
+      }
       product.title = updatedTitle
       product.description = updatedDesc
       product.price = updatedPrice
       product.imageUrl = updatedImgUrl
       return product.save()
+      .then(result => {
+        console.log('UPDATED PRODUCT', result)
+        response.redirect('/admin/products')
+  
+      })
     })
-    .then(result => {
-      console.log('UPDATED PRODUCT', result)
-      response.redirect('/admin/products')
 
-    })
     .catch(error => {
       console.log(error)
     })
   }
 
   exports.getProducts = (request, response, next) => {
-    Product.find()
-    // 
+    // one layer of validation
+    // only render products for admin product view that matches current user id
+    Product.find({userId: request.user._id})
     .populate('userId')
       .then(products => {
         response.render('admin/products', { 
@@ -98,7 +103,8 @@ exports.getAddProduct = (request, response, next) => {
 
   exports.postDeleteProduct = (request, response, next) => {
     const prodId = request.body.productId
-    Product.findByIdAndRemove(prodId)
+    // find product where the product id matches and where the user id matches
+    Product.deleteOne({ _id: prodId, userId: request.user._id })
     .then(result => {
       response.redirect('/admin/products')
     })
