@@ -3,7 +3,6 @@ const User = require('../models/user')
 const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport')
 const crypto = require('crypto')
-const user = require('../models/user')
 const { validationResult } = require('express-validator/check')
 const transporter = nodemailer.createTransport(sendgridTransport({
   auth: {
@@ -22,6 +21,10 @@ exports.getLogin = (request, response, next) => {
     path: '/login',
     pageTitle: "Login",
     errorMessage: message,
+    oldInput: {
+      email: '',
+      password: ''
+    },
     validationErrors: []
   })
 }
@@ -57,6 +60,10 @@ exports.postLogin = (request, response, next) => {
       path: '/login',
       pageTitle: "Login",
       errorMessage: errors.array()[0].msg,
+      oldInput: { 
+        email: email, 
+        password: password, 
+      },
       validationErrors: errors.array()
     })
   }
