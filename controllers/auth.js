@@ -76,7 +76,6 @@ exports.postLogin = (request, response, next) => {
 exports.postSignup = (request, response, next) => {
   const email = request.body.email
   const password = request.body.password
-  const confirmPassword = request.body.confirmPassword
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
     return response.status(422).render('auth/signup', {
@@ -85,13 +84,8 @@ exports.postSignup = (request, response, next) => {
       errorMessage: errors.array()[0].msg
     })
   }
-  User.findOne({email: email})
-  .then(userDoc => {
-    if (userDoc) {
-      request.flash('error', 'Email already taken. Please pick a different one')
-      return response.redirect('/signup')
-    }
-    return bcrypt
+
+     bcrypt
       .hash(password, 12)
       .then(hashedPassword => {
         const user = new User({
@@ -113,11 +107,6 @@ exports.postSignup = (request, response, next) => {
       .catch(error => {
         console.log(error)
       })
-  })
-
-  .catch(error => {
-    console.log(error)
-  })
 }
 
 exports.postLogout = (request, response, next) => {
