@@ -36,7 +36,12 @@ exports.getSignup = (request, response, next) => {
   response.render('auth/signup', {
     path: '/signup',
     pageTitle: "Signup",
-    errorMessage: message
+    errorMessage: message,
+    oldInput: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    }
   })
 }
 
@@ -46,7 +51,7 @@ exports.postLogin = (request, response, next) => {
   const password = request.body.password
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
-    return response.render('auth/login', {
+    return response.status(422).render('auth/login', {
       path: '/login',
       pageTitle: "Login",
       errorMessage: errors.array()[0].msg
@@ -84,12 +89,18 @@ exports.postLogin = (request, response, next) => {
 exports.postSignup = (request, response, next) => {
   const email = request.body.email
   const password = request.body.password
+  const confirmPassword = request.body.confirmPassword
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
     return response.status(422).render('auth/signup', {
       path: '/signup',
       pageTitle: "Signup",
-      errorMessage: errors.array()[0].msg
+      errorMessage: errors.array()[0].msg,
+      oldInput: { 
+        email: email, 
+        password: password, 
+        confirmPassword: confirmPassword 
+      }
     })
   }
 
