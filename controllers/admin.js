@@ -7,6 +7,7 @@ exports.getAddProduct = (request, response, next) => {
       path: '/admin/add-product',
       hasError: false,
       editing: false,
+      errorMessage: null
     })
   }
 
@@ -29,6 +30,7 @@ exports.getAddProduct = (request, response, next) => {
           price: price,
           description: description
         },
+        errorMessage: errors.array()[0].msg
         })
     }
 
@@ -68,6 +70,7 @@ exports.getAddProduct = (request, response, next) => {
         editing: editMode,
         product: product,
         hasError: false,
+        errorMessage: null
         })
     })
     .catch(error => {
