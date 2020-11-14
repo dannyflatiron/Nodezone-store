@@ -44,6 +44,14 @@ exports.postLogin = (request, response, next) => {
   // redirects resets the request object therefore isLoggedIn is inherently undefined when it reaches the view
   const email = request.body.email
   const password = request.body.password
+  const errors = validationResult(request)
+  if (!errors.isEmpty()) {
+    return response.render('auth/login', {
+      path: '/login',
+      pageTitle: "Login",
+      errorMessage: errors.array()[0].msg
+    })
+  }
     User.findOne({email: email})
     .then(user => {
       if (!user) {
