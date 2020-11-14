@@ -14,8 +14,8 @@ router.get('/products', isAuth, adminController.getProducts)
 
 router.post('/add-product', 
 body('title')
-  .isAlphanumeric(),
-  isLength({ min: 3 })
+  .isString()
+  .isLength({ min: 3 })
   .trim(),
 body('imageUrl')
   .isURL(),
@@ -31,8 +31,8 @@ router.get('/edit-product/:productId', isAuth, adminController.getEditProduct)
 
 router.post('/edit-product', 
 body('title')
-  .isAlphanumeric(),
-  isLength({ min: 3 })
+  .isAlphanumeric()
+  .isLength({ min: 3 })
   .trim(),
 body('imageUrl')
   .isURL(),
