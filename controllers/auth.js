@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport')
 const crypto = require('crypto')
 const user = require('../models/user')
+const { validationResult } = require('express-validator/check')
 const transporter = nodemailer.createTransport(sendgridTransport({
   auth: {
     api_key: `${process.env.SENDGRIDAPIKEY}`
@@ -76,6 +77,7 @@ exports.postSignup = (request, response, next) => {
   const email = request.body.email
   const password = request.body.password
   const confirmPassword = request.body.confirmPassword
+  const errors = validationResult(request)
   User.findOne({email: email})
   .then(userDoc => {
     if (userDoc) {
