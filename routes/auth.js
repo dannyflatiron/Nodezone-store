@@ -13,9 +13,11 @@ router.get('/signup', authController.getSignup)
 router.post('/login', 
 body('email')
   .isEmail()
-  .withMessage('Please enter a valid email'),
+  .withMessage('Please enter a valid email')
+  .normalizeEmail(),
 body('password', 'Incorrect password, please try again or reset your password')
-.isLength({ min: 5 }),
+.isLength({ min: 5 })
+.trim(),
 authController.postLogin)
 
 router.post('/signup', 
@@ -23,6 +25,7 @@ router.post('/signup',
 body('email')
   .isEmail()
   .withMessage('Please enter a valid email')
+  .normalizeEmail()
   .custom((value, { req }) => {
   // check if email already exists in database
 return User.findOne({email: value})
@@ -34,9 +37,12 @@ return User.findOne({email: value})
 }),
 // check for password value in the body of the post request
 body('password', 'Please enter a password with at least 5 characters')
-  .isLength({min: 5}),
+  .isLength({min: 5})
+  .trim(),
 // check if confirmed password field matches password field
-body('confirmPassword').custom((value, { req }) => {
+body('confirmPassword')
+.trim()
+.custom((value, { req }) => {
   if (value !== req.body.password) {
     throw new Error('Passwords have to match!')
   } 
