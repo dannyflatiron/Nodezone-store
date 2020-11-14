@@ -78,6 +78,13 @@ exports.postSignup = (request, response, next) => {
   const password = request.body.password
   const confirmPassword = request.body.confirmPassword
   const errors = validationResult(request)
+  if (!errors.isEmpty()) {
+    return response.status(422).render('auth/signup', {
+      path: '/signup',
+      pageTitle: "Signup",
+      errorMessage: errors.array()[0].msg
+    })
+  }
   User.findOne({email: email})
   .then(userDoc => {
     if (userDoc) {
