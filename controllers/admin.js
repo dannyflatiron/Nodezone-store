@@ -7,7 +7,8 @@ exports.getAddProduct = (request, response, next) => {
       path: '/admin/add-product',
       hasError: false,
       editing: false,
-      errorMessage: null
+      errorMessage: null,
+      validationErrors: []
     })
   }
 
@@ -30,7 +31,8 @@ exports.getAddProduct = (request, response, next) => {
           price: price,
           description: description
         },
-        errorMessage: errors.array()[0].msg
+        errorMessage: errors.array()[0].msg,
+        validationErrors: errors.array()
         })
     }
 
@@ -70,7 +72,8 @@ exports.getAddProduct = (request, response, next) => {
         editing: editMode,
         product: product,
         hasError: false,
-        errorMessage: null
+        errorMessage: null,
+        validationErrors: []
         })
     })
     .catch(error => {
@@ -84,6 +87,26 @@ exports.getAddProduct = (request, response, next) => {
     const updatedPrice = request.body.price
     const updatedDesc = request.body.description
     const updatedImgUrl = request.body.imageUrl
+    const errors = validationResult(request)
+
+    if (!errors.isEmpty()) {
+      return response.status(422).render('admin/edit-product', { 
+        pageTitle: "Edit Product", 
+        path: '/admin/edit-product',
+        editing: true,
+        hasError: true, 
+        product: {
+          title: updatedTitle,
+          imageUrl: updatedImgUrl,
+          price: updatedPrice,
+          description: updatedDesc,
+          _id: prodId
+        },
+        errorMessage: errors.array()[0].msg,
+        validationErrors: errors.array()
+        })
+    }
+
     Product.findById(prodId)
     .then(product => {
       if (product.userId.toString() !== request.user._id.toString()) {
