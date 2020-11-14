@@ -16,14 +16,18 @@ router.post('/add-product',
 body('title')
   .isString()
   .isLength({ min: 3 })
-  .trim(),
+  .trim()
+  .withMessage('Please enter a title minimum 3 characters'),
 body('imageUrl')
-  .isURL(),
+  .isURL()
+  .withMessage('Please enter a valid URL'),
 body('price')
-  .isFloat(),
+  .isFloat()
+  .withMessage('Please use appropriate format. Ex: 12.99'),
 body('description')
   .isLength({ min: 5, max: 400 })
-  .trim(),
+  .trim()
+  .withMessage('Minimum characters needed: 5, maximum characters allowed: 400'),
 isAuth, 
 adminController.postAddProduct)
 
@@ -31,16 +35,20 @@ router.get('/edit-product/:productId', isAuth, adminController.getEditProduct)
 
 router.post('/edit-product', 
 body('title')
-  .isAlphanumeric()
+  .isString()
   .isLength({ min: 3 })
-  .trim(),
+  .trim()
+  .withMessage('Please enter a title minimum 3 characters'),
 body('imageUrl')
-  .isURL(),
+  .isURL()
+  .withMessage('Please enter a valid URL'),
 body('price')
-  .isFloat(),
+  .isFloat()
+  .withMessage('Please use appropriate format. Ex: 12.99'),
 body('description')
   .isLength({ min: 5, max: 400 })
-  .trim(),
+  .trim()
+  .withMessage('Minimum characters needed: 5, maximum characters allowed: 400'),
 isAuth, adminController.postEditProduct)
 
 router.post('/delete-product', isAuth, adminController.postDeleteProduct)
