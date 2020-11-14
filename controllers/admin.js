@@ -18,7 +18,7 @@ exports.getAddProduct = (request, response, next) => {
     const errors = validationResult(request)
 
     if (!errors.isEmpty()) {
-      response.status(422).render('admin/edit-product', { 
+      return response.status(422).render('admin/edit-product', { 
         pageTitle: "Add Product", 
         path: '/admin/edit-product',
         editing: false,
