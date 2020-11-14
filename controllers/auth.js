@@ -21,7 +21,8 @@ exports.getLogin = (request, response, next) => {
   response.render('auth/login', {
     path: '/login',
     pageTitle: "Login",
-    errorMessage: message
+    errorMessage: message,
+    validationErrors: []
   })
 }
 
@@ -41,7 +42,8 @@ exports.getSignup = (request, response, next) => {
       email: '',
       password: '',
       confirmPassword: ''
-    }
+    },
+    validationErrors: []
   })
 }
 
@@ -54,7 +56,8 @@ exports.postLogin = (request, response, next) => {
     return response.status(422).render('auth/login', {
       path: '/login',
       pageTitle: "Login",
-      errorMessage: errors.array()[0].msg
+      errorMessage: errors.array()[0].msg,
+      validationErrors: errors.array()
     })
   }
     User.findOne({email: email})
@@ -100,7 +103,8 @@ exports.postSignup = (request, response, next) => {
         email: email, 
         password: password, 
         confirmPassword: confirmPassword 
-      }
+      },
+      validationErrors: errors.array()
     })
   }
 
