@@ -18,7 +18,14 @@ check('email')
 .withMessage('Please enter a valid email'),
 // check for password value in the body of the post request
 body('password', 'Please enter a password with only numbers and text and at least 5 characters')
-.isLength({min: 5})
+.isLength({min: 5}),
+// check if confirmed password field matches password field
+body('confirmPassword').custom((value, { req }) => {
+  if (value !== req.body.password) {
+    throw new Error('Passwords have to match!')
+  } 
+  return true
+})
 , authController.postSignup)
 
 router.post('/logout', authController.postLogout)
