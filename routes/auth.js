@@ -16,8 +16,8 @@ body('email')
   .withMessage('Please enter a valid email')
   .normalizeEmail(),
 body('password', 'Incorrect password, please try again or reset your password')
-.isLength({ min: 5 })
-.trim(),
+  .isLength({ min: 5 })
+  .trim(),
 authController.postLogin)
 
 router.post('/signup', 
@@ -41,13 +41,13 @@ body('password', 'Please enter a password with at least 5 characters')
   .trim(),
 // check if confirmed password field matches password field
 body('confirmPassword')
-.trim()
-.custom((value, { req }) => {
-  if (value !== req.body.password) {
-    throw new Error('Passwords have to match!')
-  } 
-  return true
-})
+  .trim()
+  .custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Passwords have to match!')
+    } 
+    return true
+  })
 , authController.postSignup)
 
 router.post('/logout', authController.postLogout)
