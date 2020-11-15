@@ -56,6 +56,7 @@ exports.getAddProduct = (request, response, next) => {
       error.httpStatusCode = 500
       // express will skip all middleware and go straight to error middleware 
       // if next() has an error argument
+      // next has to be used in order to send the error to the error middleware
       return next(error)
     })
   }

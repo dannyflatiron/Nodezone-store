@@ -56,6 +56,7 @@ app.use((request, response, next) => {
     next()
   })
   .catch(error => {
+    // next has to be used in order to send the error to the error middleware
     next(new Error(error)) 
   })
 })
