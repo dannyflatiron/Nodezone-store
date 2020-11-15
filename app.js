@@ -37,28 +37,30 @@ app.use(csrfProtection)
 app.use(flash())
 
 app.use((request, response, next) => {
+  // locals only exist in views
+  response.locals.isAuthenticated = request.session.isLoggedIn
+  response.locals.csrfToken = request.csrfToken()
+  next()
+})
+
+app.use((request, response, next) => {
   if (!request.session.user) {
     return next()
   }
   User.findById(request.session.user._id)
   .then(user => {
     if (!user) {
-      next()
+      return next()
     }
     request.user = user
     next()
   })
   .catch(error => {
-    throw new Error(error)
+    next(new Error(error)) 
   })
 })
 
-app.use((request, response, next) => {
-  // locals only exist in views
-  response.locals.isAuthenticated = request.session.isLoggedIn
-  response.locals.csrfToken = request.csrfToken()
-  next()
-})
+
 
 app.use('/admin', adminRoutes) // leading fitler
 app.use(shopRoutes)
@@ -70,7 +72,12 @@ app.use(errorController.get404Page)
 
 // error middleware
 app.use((error, request, response, next) => {
-  response.redirect('/500')
+  // response.redirect('/500')
+  response.status(500).render('500', { 
+    pageTitle: 'Error', 
+    path: '/500',
+    isAuthenticated: request.session.isLoggedIn 
+  })
 })
 
 
