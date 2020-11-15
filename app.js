@@ -42,10 +42,15 @@ app.use((request, response, next) => {
   }
   User.findById(request.session.user._id)
   .then(user => {
+    if (!user) {
+      next()
+    }
     request.user = user
     next()
   })
-  .catch(error => console.log(error))
+  .catch(error => {
+    throw new Error(error)
+  })
 })
 
 app.use((request, response, next) => {
@@ -59,7 +64,14 @@ app.use('/admin', adminRoutes) // leading fitler
 app.use(shopRoutes)
 app.use(authRoutes)
 
+app.get('/500', errorController.get500Page)
+
 app.use(errorController.get404Page)
+
+// error middleware
+app.use((error, request, response, next) => {
+  response.redirect('/500')
+})
 
 
 mongoose.connect(MONGODB_URI)
