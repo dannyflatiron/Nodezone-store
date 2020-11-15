@@ -22,7 +22,7 @@ exports.getAddProduct = (request, response, next) => {
     if (!errors.isEmpty()) {
       return response.status(422).render('admin/edit-product', { 
         pageTitle: "Add Product", 
-        path: '/admin/edit-product',
+        path: '/admin/add-product',
         editing: false,
         hasError: true, 
         product: {
@@ -50,8 +50,13 @@ exports.getAddProduct = (request, response, next) => {
     .then(result => {
       response.redirect('/admin/products')
     })
-    .catch(error => {
-      console.log(error)
+    .catch(err => {
+      // response.redirect('/500')
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      // express will skip all middleware and go straight to error middleware 
+      // if next() has an error argument
+      return next(error)
     })
   }
 
@@ -76,8 +81,13 @@ exports.getAddProduct = (request, response, next) => {
         validationErrors: []
         })
     })
-    .catch(error => {
-      console.log(error)
+    .catch(err => {
+      // response.redirect('/500')
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      // express will skip all middleware and go straight to error middleware 
+      // if next() has an error argument
+      return next(error)
     })
   }
 
@@ -124,8 +134,13 @@ exports.getAddProduct = (request, response, next) => {
       })
     })
 
-    .catch(error => {
-      console.log(error)
+    .catch(err => {
+      // response.redirect('/500')
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      // express will skip all middleware and go straight to error middleware 
+      // if next() has an error argument
+      return next(error)
     })
   }
 
@@ -141,8 +156,13 @@ exports.getAddProduct = (request, response, next) => {
           path: '/admin/products', 
             })
       })
-      .catch(error => {
-        console.log(error)
+      .catch(err => {
+        // response.redirect('/500')
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        // express will skip all middleware and go straight to error middleware 
+        // if next() has an error argument
+        return next(error)
       })
   }
 
@@ -153,7 +173,12 @@ exports.getAddProduct = (request, response, next) => {
     .then(result => {
       response.redirect('/admin/products')
     })
-    .catch(error => {
-      console.log(error)
+    .catch(err => {
+      // response.redirect('/500')
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      // express will skip all middleware and go straight to error middleware 
+      // if next() has an error argument
+      return next(error)
     })
   }

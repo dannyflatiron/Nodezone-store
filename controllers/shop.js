@@ -10,8 +10,13 @@ exports.getProducts = (request, response, next) => {
       path: '/products'
     })
   })
-  .catch(error => {
-    console.log('error in shop controller getProducts', error)
+  .catch(err => {
+    // response.redirect('/500')
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    // express will skip all middleware and go straight to error middleware 
+    // if next() has an error argument
+    return next(error)
   })
 }
 
@@ -25,8 +30,13 @@ exports.getProduct = (request, response, next) => {
       path: '/products'
     })
   })
-  .catch(error => {
-    console.log('error in shop controller getProduct', error)
+  .catch(err => {
+    // response.redirect('/500')
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    // express will skip all middleware and go straight to error middleware 
+    // if next() has an error argument
+    return next(error)
   })
 }
 
@@ -39,8 +49,13 @@ exports.getIndex = (request, response, next) => {
       path: '/',
     })
   })
-  .catch(error => {
-    console.log('error in shop controller getIndex', error)
+  .catch(err => {
+    // response.redirect('/500')
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    // express will skip all middleware and go straight to error middleware 
+    // if next() has an error argument
+    return next(error)
   })
 }
 
@@ -54,7 +69,14 @@ exports.getCart = (request, response, next) => {
       products: products
     })
   })
-  .catch(error => console.log(error))
+  .catch(err => {
+    // response.redirect('/500')
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    // express will skip all middleware and go straight to error middleware 
+    // if next() has an error argument
+    return next(error)
+  })
   
 }
 
@@ -68,8 +90,13 @@ exports.postCart = (request, response, next) => {
     console.log(result)
     response.redirect('/cart')
   })
-  .catch(error => {
-    console.log(error)
+  .catch(err => {
+    // response.redirect('/500')
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    // express will skip all middleware and go straight to error middleware 
+    // if next() has an error argument
+    return next(error)
   })
   // let fetchedCart
   // let newQuantitty = 1
@@ -110,7 +137,14 @@ exports.postCartDeleteProduct = (request, response, next) => {
   .then(result => {
     response.redirect('/cart')
   })
-  .catch(error => console.log(error))
+  .catch(err => {
+    // response.redirect('/500')
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    // express will skip all middleware and go straight to error middleware 
+    // if next() has an error argument
+    return next(error)
+  })
 }
 
 // removed getCheckout()
@@ -137,7 +171,14 @@ exports.postOrder = (request, response, next) => {
   .then(result => {
     response.redirect('/orders')
   })
-  .catch(error => console.log(error))
+  .catch(err => {
+    // response.redirect('/500')
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    // express will skip all middleware and go straight to error middleware 
+    // if next() has an error argument
+    return next(error)
+  })
 }
 
 exports.getOrders = (request, response, next) => {
@@ -149,5 +190,12 @@ exports.getOrders = (request, response, next) => {
       orders: orders
     })
   })
-  .catch(errors => console.log(error))
+  .catch(err => {
+    // response.redirect('/500')
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    // express will skip all middleware and go straight to error middleware 
+    // if next() has an error argument
+    return next(error)
+  })
 }

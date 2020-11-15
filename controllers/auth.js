@@ -92,8 +92,14 @@ exports.postLogin = (request, response, next) => {
       })
 
     })
-    .catch(error => console.log(error))
-  // response.setHeader('Set-Cookie', 'loggedIn=true')
+    .catch(err => {
+      // response.redirect('/500')
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      // express will skip all middleware and go straight to error middleware 
+      // if next() has an error argument
+      return next(error)
+    })  // response.setHeader('Set-Cookie', 'loggedIn=true')
 }
 
 exports.postSignup = (request, response, next) => {
@@ -134,8 +140,13 @@ exports.postSignup = (request, response, next) => {
           html: '<h1>Your account has been successfully created!</h1>'
         })
       })
-      .catch(error => {
-        console.log(error)
+      .catch(err => {
+        // response.redirect('/500')
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        // express will skip all middleware and go straight to error middleware 
+        // if next() has an error argument
+        return next(error)
       })
 }
 
@@ -189,8 +200,13 @@ exports.postReset = (request, response, next) => {
         `
       })
     })
-    .catch(error => {
-      console.log(error)
+    .catch(err => {
+      // response.redirect('/500')
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      // express will skip all middleware and go straight to error middleware 
+      // if next() has an error argument
+      return next(error)
     })
   })
 }
@@ -211,12 +227,17 @@ exports.getNewPassword = (req, res, next) => {
         errorMessage: message,
         userId: user._id.toString(),
         passwordToken: token
-      });
+      })
     })
     .catch(err => {
-      console.log(err);
-    });
-};
+      // response.redirect('/500')
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      // express will skip all middleware and go straight to error middleware 
+      // if next() has an error argument
+      return next(error)
+    })
+}
 
 exports.postNewPassword = (req, res, next) => {
   const newPassword = req.body.password;
@@ -231,7 +252,7 @@ exports.postNewPassword = (req, res, next) => {
   })
     .then(user => {
       resetUser = user;
-      return bcrypt.hash(newPassword, 12);
+      return bcrypt.hash(newPassword, 12)
     })
     .then(hashedPassword => {
       resetUser.password = hashedPassword;
@@ -240,9 +261,14 @@ exports.postNewPassword = (req, res, next) => {
       return resetUser.save();
     })
     .then(result => {
-      res.redirect('/login');
+      res.redirect('/login')
     })
     .catch(err => {
-      console.log(err);
-    });
-};
+      // response.redirect('/500')
+      const error = new Error(err)
+      error.httpStatusCode = 500
+      // express will skip all middleware and go straight to error middleware 
+      // if next() has an error argument
+      return next(error)
+    })
+}
