@@ -30,6 +30,7 @@ const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
 const authRoutes = require('./routes/auth')
 
+// bodyParser encodes all text into urlencoded data for all incoming requests
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({ secret: `${process.env.SESSION}`, resave: false, saveUninitialized: false, store: store }))
