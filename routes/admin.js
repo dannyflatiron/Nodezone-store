@@ -18,9 +18,8 @@ body('title')
   .isLength({ min: 3 })
   .trim()
   .withMessage('Please enter a title minimum 3 characters'),
-body('imageUrl')
-  .isURL()
-  .withMessage('Please enter a valid URL'),
+// body('image')
+//   .withMessage('Please enter a valid URL'),
 body('price')
   .isFloat()
   .withMessage('Please use appropriate format. Ex: 12.99'),
