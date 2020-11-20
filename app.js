@@ -8,6 +8,7 @@ const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
 const flash = require('connect-flash')
+const multer = require('multer')
 
 const errorController = require('./controllers/error')
 
@@ -32,6 +33,7 @@ const authRoutes = require('./routes/auth')
 
 // bodyParser encodes all text into urlencoded data for all incoming requests
 app.use(bodyParser.urlencoded({extended: false}))
+app.use(multer().single('image'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({ secret: `${process.env.SESSION}`, resave: false, saveUninitialized: false, store: store }))
 app.use(csrfProtection)
