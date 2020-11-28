@@ -1,5 +1,7 @@
 const Product = require('../models/product')
 const { validationResult } = require('express-validator/check')
+const fileHelper = require('../util/file')
+const product = require('../models/product')
 
 exports.getAddProduct = (request, response, next) => {
     response.render('admin/edit-product', { 
@@ -143,6 +145,7 @@ exports.getAddProduct = (request, response, next) => {
       product.description = updatedDesc
       product.price = updatedPrice
       if (image) {
+        fileHelper.deleteFile(product.imageUrl)
         product.imageUrl = image.path
       }
       product.imageUrl = updatedImgUrl
@@ -189,16 +192,22 @@ exports.getAddProduct = (request, response, next) => {
   exports.postDeleteProduct = (request, response, next) => {
     const prodId = request.body.productId
     // find product where the product id matches and where the user id matches
-    Product.deleteOne({ _id: prodId, userId: request.user._id })
-    .then(result => {
-      response.redirect('/admin/products')
-    })
-    .catch(err => {
-      // response.redirect('/500')
-      const error = new Error(err)
-      error.httpStatusCode = 500
-      // express will skip all middleware and go straight to error middleware 
-      // if next() has an error argument
-      return next(error)
+    Product.findById(prodId).then(product => {
+      if (!product) {
+        return next(new Error('Product not found.'))
+      }
+      fileHelper.deleteFile(product.imageUrl)
+      Product.deleteOne({ _id: prodId, userId: request.user._id })
+      .then(result => {
+        response.redirect('/admin/products')
+      })
+      .catch(err => {
+        // response.redirect('/500')
+        const error = new Error(err)
+        error.httpStatusCode = 500
+        // express will skip all middleware and go straight to error middleware 
+        // if next() has an error argument
+        return next(error)
+      })
     })
   }
