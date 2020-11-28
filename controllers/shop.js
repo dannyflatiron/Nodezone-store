@@ -1,5 +1,8 @@
+const fs = require('fs')
+const path = require('path')
 const Product = require('../models/product')
 const Order = require('../models/order')
+const { request, response } = require('express')
 
 exports.getProducts = (request, response, next) => {
   Product.find()
@@ -198,4 +201,26 @@ exports.getOrders = (request, response, next) => {
     // if next() has an error argument
     return next(error)
   })
+}
+
+exports.getInvoice = (request, response, next) => {
+  const orderId = request.params.orderId
+  Order.findById(orderId).then(order => {
+    if (!order) {
+      return next(new Error('No order found.'))
+    }
+    if (order.user.userId.toString() !== request.user._id.toString()) {
+      return next(new Error('Unauthorized'))
+    }
+  const invoiceName = 'invoice-' + orderId + '.pdf'
+  const invoicePath = path.join('data', 'invoices', invoiceName)
+  fs.readFile(invoicePath, (err, data) => {
+    if (err) {
+      return next(err)
+    }
+    response.setHeader('Content-Type', 'application/pdf')
+    response.setHeader('Content-Dsiposition', 'inline; filename="' + invoiceName + '"')
+    response.send(data)
+  })
+  }).catch(err => next(err))
 }
