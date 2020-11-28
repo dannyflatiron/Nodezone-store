@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const Product = require('../models/product')
 const Order = require('../models/order')
-const { request, response } = require('express')
+const PDFDocument = require('pdfkit')
 
 exports.getProducts = (request, response, next) => {
   Product.find()
@@ -214,6 +214,16 @@ exports.getInvoice = (request, response, next) => {
     }
   const invoiceName = 'invoice-' + orderId + '.pdf'
   const invoicePath = path.join('data', 'invoices', invoiceName)
+
+  const pdfDoc = new PDFDocument()
+  response.setHeader('Content-Type', 'application/pdf')
+  response.setHeader('Content-Dsiposition', 'inline; filename="' + invoiceName + '"')
+  pdfDoc.pipe(fs.createWriteStream(invoicePath))
+  pdfDoc.pipe(response)
+
+  pdfDoc.text('Hello world!')
+
+  pdfDoc.end()
   // fs.readFile(invoicePath, (err, data) => {
   //   if (err) {
   //     return next(err)
@@ -222,9 +232,8 @@ exports.getInvoice = (request, response, next) => {
   //   response.setHeader('Content-Dsiposition', 'inline; filename="' + invoiceName + '"')
   //   response.send(data)
   // })
-  const file = fs.createReadStream(invoicePath)
-  response.setHeader('Content-Type', 'application/pdf')
-  response.setHeader('Content-Dsiposition', 'inline; filename="' + invoiceName + '"')
-  file.pipe(response)
+  // const file = fs.createReadStream(invoicePath)
+
+  // file.pipe(response)
   }).catch(err => next(err))
 }
