@@ -3,6 +3,8 @@ const path = require('path')
 const Product = require('../models/product')
 const Order = require('../models/order')
 const PDFDocument = require('pdfkit')
+const ITEMS_PER_PAGE = 2
+
 
 exports.getProducts = (request, response, next) => {
   Product.find()
@@ -44,7 +46,11 @@ exports.getProduct = (request, response, next) => {
 }
 
 exports.getIndex = (request, response, next) => {
+  const page = request.query.page
+  console.log("request", request.query.page)
   Product.find()
+  .skip((page - 1) * ITEMS_PER_PAGE)  
+  .limit(ITEMS_PER_PAGE)
   .then(products => {
     response.render('shop/index', { 
       prods: products, 
