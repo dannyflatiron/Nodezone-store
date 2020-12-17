@@ -47,6 +47,6 @@ body('description')
   .withMessage('Minimum characters needed: 5, maximum characters allowed: 400'),
 isAuth, adminController.postEditProduct)
 
-router.post('/delete-product', isAuth, adminController.postDeleteProduct)
+router.delete('/product/:productId', isAuth, adminController.deleteProduct)
 
 module.exports = router
