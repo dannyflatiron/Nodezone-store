@@ -3,6 +3,7 @@ const path = require('path')
 const Product = require('../models/product')
 const Order = require('../models/order')
 const PDFDocument = require('pdfkit')
+const product = require('../models/product')
 const ITEMS_PER_PAGE = 1
 
 
@@ -30,11 +31,8 @@ exports.getProducts = (request, response, next) => {
     })
   })
   .catch(err => {
-    // response.redirect('/500')
     const error = new Error(err)
     error.httpStatusCode = 500
-    // express will skip all middleware and go straight to error middleware 
-    // if next() has an error argument
     return next(error)
   })
 }
@@ -50,11 +48,8 @@ exports.getProduct = (request, response, next) => {
     })
   })
   .catch(err => {
-    // response.redirect('/500')
     const error = new Error(err)
     error.httpStatusCode = 500
-    // express will skip all middleware and go straight to error middleware 
-    // if next() has an error argument
     return next(error)
   })
 }
@@ -83,11 +78,8 @@ exports.getIndex = (request, response, next) => {
     })
   })
   .catch(err => {
-    // response.redirect('/500')
     const error = new Error(err)
     error.httpStatusCode = 500
-    // express will skip all middleware and go straight to error middleware 
-    // if next() has an error argument
     return next(error)
   })
 }
@@ -103,11 +95,8 @@ exports.getCart = (request, response, next) => {
     })
   })
   .catch(err => {
-    // response.redirect('/500')
     const error = new Error(err)
     error.httpStatusCode = 500
-    // express will skip all middleware and go straight to error middleware 
-    // if next() has an error argument
     return next(error)
   })
   
@@ -124,44 +113,10 @@ exports.postCart = (request, response, next) => {
     response.redirect('/cart')
   })
   .catch(err => {
-    // response.redirect('/500')
     const error = new Error(err)
     error.httpStatusCode = 500
-    // express will skip all middleware and go straight to error middleware 
-    // if next() has an error argument
     return next(error)
   })
-  // let fetchedCart
-  // let newQuantitty = 1
-  // request.user.getCart()
-  // .then(cart => {
-  //   fetchedCart = cart
-  //   return cart.getProducts({ where: { id: prodId }})
-  // })
-  // // updates quantity of product in cart if product already exists in cart
-  // .then(products => {
-  //   let product
-  //   if (products.length > 0) {
-  //     product = products[0]
-  //   }
-    
-  //   if (product) {
-  //     const oldQuantity = product.cartItem.quantity
-  //     newQuantitty = oldQuantity + 1
-  //     return product
-  //   }
-  //   return Product.findByPk(prodId)
-  // })
-  // // adds a new product to cart 
-  // .then(product => {
-  //   return fetchedCart.addProduct(product, 
-  //     { through: { quantity: newQuantitty } })
-  // })
-  // .catch(error => console.log(error))
-  // .then(() => {
-  //   response.redirect('/cart')
-  // })
-  // .catch(error => console.log(error))
 }
 
 exports.postCartDeleteProduct = (request, response, next) => {
@@ -171,16 +126,39 @@ exports.postCartDeleteProduct = (request, response, next) => {
     response.redirect('/cart')
   })
   .catch(err => {
-    // response.redirect('/500')
     const error = new Error(err)
     error.httpStatusCode = 500
-    // express will skip all middleware and go straight to error middleware 
-    // if next() has an error argument
     return next(error)
   })
 }
 
 // removed getCheckout()
+
+exports.getCheckout = (request, response, next) => {
+  request.user.populate('cart.items.productId').execPopulate()
+  .then(user => {
+    const products = user.cart.items
+    let productPrice
+    let productQuantity
+    products.forEach(p => {
+      console.log("quantity", p.quantity)
+      productPrice = p.productId.price
+      productQuantity = p.quantity
+    })
+    
+    response.render('shop/checkout', {
+      path: '/checkout',
+      pageTitle: "Checkout",
+      products: products,
+      totalSum: productPrice * productQuantity,
+    })
+  })
+  .catch(err => {
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    return next(error)
+  })
+}
 
 exports.postOrder = (request, response, next) => {
   request.user.populate('cart.items.productId').execPopulate()
@@ -205,11 +183,8 @@ exports.postOrder = (request, response, next) => {
     response.redirect('/orders')
   })
   .catch(err => {
-    // response.redirect('/500')
     const error = new Error(err)
     error.httpStatusCode = 500
-    // express will skip all middleware and go straight to error middleware 
-    // if next() has an error argument
     return next(error)
   })
 }
@@ -224,11 +199,8 @@ exports.getOrders = (request, response, next) => {
     })
   })
   .catch(err => {
-    // response.redirect('/500')
     const error = new Error(err)
     error.httpStatusCode = 500
-    // express will skip all middleware and go straight to error middleware 
-    // if next() has an error argument
     return next(error)
   })
 }
@@ -264,16 +236,6 @@ exports.getInvoice = (request, response, next) => {
   pdfDoc.fontSize(20).text('Total Price: $' + totalPrice)
 
   pdfDoc.end()
-  // fs.readFile(invoicePath, (err, data) => {
-  //   if (err) {
-  //     return next(err)
-  //   }
-  //   response.setHeader('Content-Type', 'application/pdf')
-  //   response.setHeader('Content-Dsiposition', 'inline; filename="' + invoiceName + '"')
-  //   response.send(data)
-  // })
-  // const file = fs.createReadStream(invoicePath)
 
-  // file.pipe(response)
   }).catch(err => next(err))
 }
