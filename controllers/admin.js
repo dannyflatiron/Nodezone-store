@@ -189,8 +189,8 @@ exports.getAddProduct = (request, response, next) => {
       })
   }
 
-  exports.postDeleteProduct = (request, response, next) => {
-    const prodId = request.body.productId
+  exports.deleteProduct = (request, response, next) => {
+    const prodId = request.params.productId
     // find product where the product id matches and where the user id matches
     Product.findById(prodId).then(product => {
       if (!product) {
@@ -199,15 +199,10 @@ exports.getAddProduct = (request, response, next) => {
       fileHelper.deleteFile(product.imageUrl)
       Product.deleteOne({ _id: prodId, userId: request.user._id })
       .then(result => {
-        response.redirect('/admin/products')
+        response.status(200).json({message: 'Success!'})
       })
       .catch(err => {
-        // response.redirect('/500')
-        const error = new Error(err)
-        error.httpStatusCode = 500
-        // express will skip all middleware and go straight to error middleware 
-        // if next() has an error argument
-        return next(error)
+        response.status(500).json({message: 'Deleting product failed'})
       })
     })
   }
