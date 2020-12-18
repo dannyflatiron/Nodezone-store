@@ -9,6 +9,7 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
 const flash = require('connect-flash')
 const multer = require('multer')
+const helmet = require('helmet')
 
 const errorController = require('./controllers/error')
 
@@ -47,6 +48,8 @@ app.set('views', 'views')
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
 const authRoutes = require('./routes/auth')
+
+app.use(helmet())
 
 // bodyParser encodes all text into urlencoded data for all incoming requests
 app.use(bodyParser.urlencoded({extended: false}))
