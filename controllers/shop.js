@@ -4,7 +4,17 @@ const Product = require('../models/product')
 const Order = require('../models/order')
 const PDFDocument = require('pdfkit')
 const product = require('../models/product')
+const { default: Stripe } = require('stripe')
 const ITEMS_PER_PAGE = 1
+const stripe = require('stripe')(`${process.env.STRIPESECRETKEY}`);
+const nodemailer = require('nodemailer')
+const sendgridTransport = require('nodemailer-sendgrid-transport')
+const transporter = nodemailer.createTransport(sendgridTransport({
+  auth: {
+    api_key: `${process.env.SENDGRIDAPIKEY}`
+  }
+}))
+
 
 
 exports.getProducts = (request, response, next) => {
@@ -109,7 +119,6 @@ exports.postCart = (request, response, next) => {
     return request.user.addToCart(product)
   })
   .then(result => {
-    console.log(result)
     response.redirect('/cart')
   })
   .catch(err => {
@@ -132,35 +141,51 @@ exports.postCartDeleteProduct = (request, response, next) => {
   })
 }
 
-// removed getCheckout()
+exports.getCheckout = (req, res, next) => {
+  let products;
+  let total = 0;
+  req.user
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then(user => {
+      products = user.cart.items;
+      total = 0;
+      products.forEach(p => {
+        total += p.quantity * p.productId.price;
+      });
 
-exports.getCheckout = (request, response, next) => {
-  request.user.populate('cart.items.productId').execPopulate()
-  .then(user => {
-    const products = user.cart.items
-    let productPrice
-    let productQuantity
-    products.forEach(p => {
-      console.log("quantity", p.quantity)
-      productPrice = p.productId.price
-      productQuantity = p.quantity
+      return stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: products.map(p => {
+          return {
+            name: p.productId.title,
+            description: p.productId.description,
+            amount: p.productId.price * 100,
+            currency: 'usd',
+            quantity: p.quantity
+          };
+        }),
+        success_url: req.protocol + '://' + req.get('host') + '/checkout/success',
+        cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
+      });
     })
-    
-    response.render('shop/checkout', {
-      path: '/checkout',
-      pageTitle: "Checkout",
-      products: products,
-      totalSum: productPrice * productQuantity,
+    .then(session => {
+      res.render('shop/checkout', {
+        path: '/checkout',
+        pageTitle: 'Checkout',
+        products: products,
+        totalSum: total,
+        sessionId: session.id
+      });
     })
-  })
-  .catch(err => {
-    const error = new Error(err)
-    error.httpStatusCode = 500
-    return next(error)
-  })
-}
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
 
-exports.postOrder = (request, response, next) => {
+exports.getCheckoutSuccess = (request, response, next) => {
   request.user.populate('cart.items.productId').execPopulate()
   .then(user => {
     const products = user.cart.items.map(i => {
@@ -181,13 +206,24 @@ exports.postOrder = (request, response, next) => {
   })
   .then(result => {
     response.redirect('/orders')
+    return transporter.sendMail({
+      to: request.user.email,
+      from: 'takeheeddesigns@gmail.com',
+      subject: 'Purchase Complete',
+      html: `
+        <p>You recently made a purchase</p>
+        <p>Click this <a href="http://localhost:3000/orders">link</a> to view your order.</p>
+      `
+    })
   })
   .catch(err => {
+    console.log(err)
     const error = new Error(err)
     error.httpStatusCode = 500
     return next(error)
   })
 }
+
 
 exports.getOrders = (request, response, next) => {
   Order.find({ 'user.userId': request.user._id })
