@@ -93,13 +93,10 @@ exports.postLogin = (request, response, next) => {
 
     })
     .catch(err => {
-      // response.redirect('/500')
       const error = new Error(err)
       error.httpStatusCode = 500
-      // express will skip all middleware and go straight to error middleware 
-      // if next() has an error argument
       return next(error)
-    })  // response.setHeader('Set-Cookie', 'loggedIn=true')
+    })  
 }
 
 exports.postSignup = (request, response, next) => {
@@ -141,11 +138,8 @@ exports.postSignup = (request, response, next) => {
         })
       })
       .catch(err => {
-        // response.redirect('/500')
-        const error = new Error(err)
+          const error = new Error(err)
         error.httpStatusCode = 500
-        // express will skip all middleware and go straight to error middleware 
-        // if next() has an error argument
         return next(error)
       })
 }
@@ -201,11 +195,8 @@ exports.postReset = (request, response, next) => {
       })
     })
     .catch(err => {
-      // response.redirect('/500')
       const error = new Error(err)
       error.httpStatusCode = 500
-      // express will skip all middleware and go straight to error middleware 
-      // if next() has an error argument
       return next(error)
     })
   })
@@ -230,11 +221,8 @@ exports.getNewPassword = (req, res, next) => {
       })
     })
     .catch(err => {
-      // response.redirect('/500')
       const error = new Error(err)
       error.httpStatusCode = 500
-      // express will skip all middleware and go straight to error middleware 
-      // if next() has an error argument
       return next(error)
     })
 }
@@ -264,11 +252,8 @@ exports.postNewPassword = (req, res, next) => {
       res.redirect('/login')
     })
     .catch(err => {
-      // response.redirect('/500')
       const error = new Error(err)
       error.httpStatusCode = 500
-      // express will skip all middleware and go straight to error middleware 
-      // if next() has an error argument
       return next(error)
     })
 }

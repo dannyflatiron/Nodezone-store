@@ -61,20 +61,13 @@ exports.getAddProduct = (request, response, next) => {
       imageUrl: imageUrl,
       userId: request.user
     })
-    // save method is coming from mongoose 
-    // it does not need to be created
-    // mongoose is an Object Relational Document framework just as ActiveRecord
     product.save()
     .then(result => {
       response.redirect('/admin/products')
     })
     .catch(err => {
-      // response.redirect('/500')
       const error = new Error(err)
       error.httpStatusCode = 500
-      // express will skip all middleware and go straight to error middleware 
-      // if next() has an error argument
-      // next has to be used in order to send the error to the error middleware
       return next(error)
     })
   }
@@ -101,11 +94,8 @@ exports.getAddProduct = (request, response, next) => {
         })
     })
     .catch(err => {
-      // response.redirect('/500')
       const error = new Error(err)
       error.httpStatusCode = 500
-      // express will skip all middleware and go straight to error middleware 
-      // if next() has an error argument
       return next(error)
     })
   }
@@ -158,17 +148,13 @@ exports.getAddProduct = (request, response, next) => {
     })
 
     .catch(err => {
-      // response.redirect('/500')
       const error = new Error(err)
       error.httpStatusCode = 500
-      // express will skip all middleware and go straight to error middleware 
-      // if next() has an error argument
       return next(error)
     })
   }
 
   exports.getProducts = (request, response, next) => {
-    // one layer of validation
     // only render products for admin product view that matches current user id
     Product.find({userId: request.user._id})
     .populate('userId')
@@ -180,11 +166,8 @@ exports.getAddProduct = (request, response, next) => {
             })
       })
       .catch(err => {
-        // response.redirect('/500')
-        const error = new Error(err)
+          const error = new Error(err)
         error.httpStatusCode = 500
-        // express will skip all middleware and go straight to error middleware 
-        // if next() has an error argument
         return next(error)
       })
   }
