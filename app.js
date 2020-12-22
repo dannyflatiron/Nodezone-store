@@ -13,6 +13,7 @@ const multer = require('multer')
 const helmet = require('helmet')
 const compression = require('compression')
 const morgan = require('morgan')
+const aws = require('aws-sdk')
 
 const errorController = require('./controllers/error')
 
@@ -22,6 +23,7 @@ const User = require('./models/user')
 const MONGODB_URI = `mongodb+srv://dannyreina:${process.env.PASSWORD}@cluster0.vnxsz.mongodb.net/shop?retryWrites=true&w=majority`
 
 const app = express()
+app.use(express.static('./public'));
 const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
@@ -54,10 +56,15 @@ const authRoutes = require('./routes/auth')
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
-app.use(helmet.referrerPolicy({
-  policy: ["origin", "unsafe-url"],
-})
-)
+app.use(helmet())
+
+// used to alter headers set by helmet to allow inline scripts
+// fixed by adding event listener in admin.js
+// app.use(helmet.referrerPolicy({
+//   policy: ["origin", "unsafe-url"],
+// })
+// )
+
 app.use(compression())
 app.use(morgan('combined', {stream: accessLogStream}))
 
@@ -113,7 +120,8 @@ app.use((error, request, response, next) => {
     isAuthenticated: request.session.isLoggedIn 
   })
 })
-
+const S3_BUCKET = process.env.S3_BUCKET
+aws.config.region = 'us-east-1'
 
 mongoose.connect(MONGODB_URI)
 .then(result => {
