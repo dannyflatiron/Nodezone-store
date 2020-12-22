@@ -54,7 +54,10 @@ const authRoutes = require('./routes/auth')
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
-app.use(helmet())
+app.use(helmet.referrerPolicy({
+  policy: ["origin", "unsafe-url"],
+})
+)
 app.use(compression())
 app.use(morgan('combined', {stream: accessLogStream}))
 
@@ -104,7 +107,6 @@ app.use(errorController.get404Page)
 
 // error middleware
 app.use((error, request, response, next) => {
-  // response.redirect('/500')
   response.status(500).render('500', { 
     pageTitle: 'Error', 
     path: '/500',
