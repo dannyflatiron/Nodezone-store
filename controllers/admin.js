@@ -138,7 +138,6 @@ exports.getAddProduct = (request, response, next) => {
         fileHelper.deleteFile(product.imageUrl)
         product.imageUrl = image.path
       }
-      product.imageUrl = updatedImgUrl
       return product.save()
       .then(result => {
         console.log('UPDATED PRODUCT', result)
