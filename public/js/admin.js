@@ -20,3 +20,19 @@ const deleteProduct = (btn) => {
     console.log(result)
   })
 }
+
+const deleteBtn = document.querySelector('.card__actions button');
+deleteBtn.addEventListener('click', () => deleteProduct(deleteBtn));
+
+// const imageUploadBtn = document.querySelector('#image')
+// console.log('imagebutton', imageUploadBtn)
+
+// const initUpload = () => {
+//   const files = document.getElementById('image').files;
+//   console.log('files', files)
+//   const file = files[0];
+//   if(file == null){
+//   return alert('No file selected.');
+//   }
+//   getSignedRequest(file);
+// }
