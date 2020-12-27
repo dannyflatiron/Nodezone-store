@@ -24,6 +24,7 @@
             <div class="form-control">
                 <label for="image">Image</label>
                 <input 
+                onchange="initUpload(this)"
                     type="file" 
                     name="image" 
                     id="image" >
@@ -57,5 +58,17 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn" type="submit"><% if (editing) { %> Update Product <% } else { %> Add Product <% } %></button>
         </form>
+    <!-- <script>
+        function initUpload(){
+            const files = document.getElementById('image').files;
+            console.log('files', files)
+            const file = files[0];
+            if(file == null){
+            return alert('No file selected.');
+            }
+            getSignedRequest(file);
+        }
+    </script> -->
+    <script src="/js/admin.js"></script>
     </main>
 <%- include('../partials/end.ejs') %>
