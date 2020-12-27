@@ -56,14 +56,14 @@ const authRoutes = require('./routes/auth')
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
-app.use(helmet())
+// app.use(helmet())
 
 // used to alter headers set by helmet to allow inline scripts
 // fixed by adding event listener in admin.js
-// app.use(helmet.referrerPolicy({
-//   policy: ["origin", "unsafe-url"],
-// })
-// )
+app.use(helmet.referrerPolicy({
+  policy: ["origin", "unsafe-url"],
+})
+)
 
 app.use(compression())
 app.use(morgan('combined', {stream: accessLogStream}))
