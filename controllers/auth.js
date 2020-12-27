@@ -129,6 +129,7 @@ exports.postSignup = (request, response, next) => {
         return user.save()
       })
       .then(result => {
+        request.flash('error', 'Successfully created account, please login')
         response.redirect('/login')
         return transporter.sendMail({
           to: email,
