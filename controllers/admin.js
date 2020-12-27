@@ -16,24 +16,24 @@ exports.getAddProduct = (request, response, next) => {
 
   exports.postAddProduct = (request, response, next) => {
     const title = request.body.title
-    const image = request.file
+    // const image = request.file
     const price = request.body.price
     const description = request.body.description
-    if (!image) {
-      return response.status(422).render('admin/edit-product', { 
-        pageTitle: "Add Product", 
-        path: '/admin/add-product',
-        editing: false,
-        hasError: true, 
-        product: {
-          title: title,
-          price: price,
-          description: description
-        },
-        errorMessage: 'Attached file is not an image',
-        validationErrors: []
-        })
-    }
+    // if (!image) {
+    //   return response.status(422).render('admin/edit-product', { 
+    //     pageTitle: "Add Product", 
+    //     path: '/admin/add-product',
+    //     editing: false,
+    //     hasError: true, 
+    //     product: {
+    //       title: title,
+    //       price: price,
+    //       description: description
+    //     },
+    //     errorMessage: 'Attached file is not an image',
+    //     validationErrors: []
+    //     })
+    // }
     const errors = validationResult(request)
 
     if (!errors.isEmpty()) {
@@ -52,13 +52,13 @@ exports.getAddProduct = (request, response, next) => {
         })
     }
 
-    const imageUrl = image.path
+    // const imageUrl = image.path
 
     const product = new Product({ 
       title: title,
       price: price,
       description: description,
-      imageUrl: imageUrl,
+      // imageUrl: imageUrl,
       userId: request.user
     })
     product.save()
@@ -105,7 +105,7 @@ exports.getAddProduct = (request, response, next) => {
     const updatedTitle = request.body.title
     const updatedPrice = request.body.price
     const updatedDesc = request.body.description
-    const image = request.file
+    // const image = request.file
     
     const errors = validationResult(request)
 
@@ -134,10 +134,10 @@ exports.getAddProduct = (request, response, next) => {
       product.title = updatedTitle
       product.description = updatedDesc
       product.price = updatedPrice
-      if (image) {
-        fileHelper.deleteFile(product.imageUrl)
-        product.imageUrl = image.path
-      }
+      // if (image) {
+      //   fileHelper.deleteFile(product.imageUrl)
+      //   product.imageUrl = image.path
+      // }
       return product.save()
       .then(result => {
         console.log('UPDATED PRODUCT', result)
