@@ -110,7 +110,7 @@ app.use(authRoutes)
 
 app.get('/500', errorController.get500Page)
 
-// app.use(errorController.get404Page)
+app.use(errorController.get404Page)
 
 // error middleware
 app.use((error, request, response, next) => {
