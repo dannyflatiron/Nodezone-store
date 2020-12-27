@@ -178,7 +178,7 @@ exports.getAddProduct = (request, response, next) => {
       if (!product) {
         return next(new Error('Product not found.'))
       }
-      fileHelper.deleteFile(product.imageUrl)
+      // fileHelper.deleteFile(product.imageUrl)
       Product.deleteOne({ _id: prodId, userId: request.user._id })
       .then(result => {
         response.status(200).json({message: 'Success!'})
