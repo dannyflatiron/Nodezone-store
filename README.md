@@ -1,73 +1,44 @@
-# starting-NodeJS-server
+# NodeZone
+### An ecommerce app built with Node.js and Express.js
 
-10/21/20
+NodeZone offers users the ability to create accounts, products, and checkout with Stripe. Users also have the ability to delete and edit their own products. NodeZone provides niche features such as email notifications for resetting passwords, new orders, receipts in PDF format, password reset updates, and new account updates. NodeZone also renders errors pages and error response headers if user tries to input bad data. App was built with the intention of learning the MERN stack. Eventually, I settled with an HTML template engine EJS for the front-end so I can become familiar with this stack as well. [Visit site](https://nodezone-store.herokuapp.com//).
 
--NodeJS is a javascript runtime. It is mostly used to create a server but it can also be used as a separate javascript "engine"
+***Upcoming Features***
+-users will be able to add images to their products
 
--NodeJS server runs as an event loop meaning it runs forever and is meant to run with non-blocking code or otherwise known as synchronus code that could severly impact performance
+---
 
--how to handle requests from the server and read data from the requests through available methods and variables such as 'request.url', 'request.headers' etc
+Tech stack includes:
+For full list of dependencies please view package.json file.
 
--learned how to set response headers with 'response.setHeader(). An error will show up if 'response.write()' is used after 'response.end()'
+* Node.js version: `14.14.0`
+* Express version: `^4.17.1`
+* Database: `mongodb`
+* Sign-In/Sign-Up: `Devise`
+* Styling: `ejs` & css
+* Email: `nodemailer`
+* Database: `mongodb`
+* Object Data Modeling: `mongoose`
+* File Upload: `multer`
+* Payment: `stripe`
+* Database: `mongodb`
+* Prod: `heroku`
 
--how to setup a route with 'const url = request.url
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
--how to setup a redirect after submitting a form
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
+=======
+Overview
 
--understand the benefits of asynchronus code in NodeJS and what problems may arise from it if used improperly
+Users may create an account securley with Omniauth. Messages and missions can be created and encoded in morse code. Search functionality is also featured in this app.
+ 
+To install this app, follow these steps:
 
--NodeJS uses only one thread in an operating system, it handles multiple requests by reading all the callback functions in the event loop and sends the heavy work such as file uploads to a worker pool that is managed by NodeJS ande exists outside of your codebase and runs on different threads 
+Fork and clone this repository
 
--utilize the Node Module System
+Run bundle install, rails db:migrate, rails db:seed, rails server to open up the browser in your browser, and enter http:localhost:3000.
 
--setting up an npm script
-
--learned how to automatically update server after code changes with nodemon 
-
--learned how to utilized debugging vs code feature in tandem with nodemon as a global package on my computer
-
--differntiate installing 3rd party packages between production dependencies, development dependencies and global dependencies 
-
--learning what is express.js (it is middleware) and installing it
-
--when using Express use next() to allow the program to travel from one middleware to the next middleware. middleware is defined when .use(request, response, next) is utilized 
-
--aware of need to order middlewares to prevent response.send errors 
-
--learned how to parse incoming request data with the body-parser package
-
--how to manage routing 
-
--learned how to filter routes
-
--advanced css styling
-
--how to submit files statically
-
--how to use the path module to get absolute clean paths which would work on every operating system
-
-10/22/20
-
--how to use html template engines
-
--how to create dynamic html files with pug
-
--how to create dynamic html files with ejs
-
--how to create dynamic html files with handlebars
-
-10/23/20
-
--MVC architecture and data flow in a node.js app
-
-10/24/20
-
--dynamic params
-
--GET routes have a params object
-
--POST routes do not have a params object, in order to access user submitted data try doing request.body
-
--mobile optimization
-
--ejs include method does not automatically take the block argument from a for loop. instead one has to manually pass in that block variable into include <%- include('../partials/add-to-cart-form.ejs', { product: product }) %>
+This project has been licensed under the MIT open source license.
+>>>>>>> 5feba998914ec77ea14e172b54f9fc84f4328077
