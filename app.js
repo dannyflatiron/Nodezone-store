@@ -123,7 +123,7 @@ app.use((error, request, response, next) => {
 const S3_BUCKET = process.env.S3_BUCKET
 aws.config.region = 'us-east-1'
 
-mongoose.connect(MONGODB_URI)
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(result => {
   
   app.listen(process.env.PORT || 3000)
