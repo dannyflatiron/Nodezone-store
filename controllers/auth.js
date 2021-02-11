@@ -3,7 +3,7 @@ const User = require('../models/user')
 const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport')
 const crypto = require('crypto')
-const { validationResult } = require('express-validator/check')
+const { validationResult } = require('express-validator')
 const transporter = nodemailer.createTransport(sendgridTransport({
   auth: {
     api_key: `${process.env.SENDGRIDAPIKEY}`
