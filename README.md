@@ -1,7 +1,7 @@
 # NodeZone
 ### An ecommerce app built with Node.js and Express.js
 
-NodeZone offers users the ability to create accounts, products, and checkout with Stripe. Users also have the ability to delete and edit their own products. NodeZone provides niche features such as email notifications for resetting passwords, new orders, receipts in PDF format, password reset updates, and new account updates. NodeZone also renders errors pages and error response headers if user tries to input bad data. App was built with the intention of learning the MERN stack. Eventually, I settled with an HTML template engine EJS for the front-end so I can become familiar with this stack as well. [Visit site](https://nodezone-store.herokuapp.com//).
+NodeZone offers users the ability to create accounts, products, and checkout with Stripe. Users also have the ability to delete and edit their own products. NodeZone provides niche features such as email notifications for resetting passwords, new orders, receipts in PDF format, password reset updates, and new account updates. NodeZone also renders errors pages and error response headers if user tries to input bad data. App was built with the intention of learning the MERN stack. Eventually, I settled with an HTML template engine EJS for the front-end so I can become familiar with this stack as well. [Visit site](https://nodezone-store.herokuapp.com).
 
 ***Upcoming Features***
 -users will be able to add images to their products
